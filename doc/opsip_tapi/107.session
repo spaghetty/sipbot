@@ -1,0 +1,13 @@
+window_sizes 1280 672 320 950 468 120
+motif_style
+diagrams
+  active  classdiagram_ref 128107 // main
+    872 427 100 4 0 0
+end
+show_stereotypes
+selected attribute_ref 129643 // line_status
+open
+  class_ref 128107 // Ua
+end
+end
+verbose
