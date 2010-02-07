@@ -1,6 +1,6 @@
 format 66
 "client" // client
-  revision 1
+  revision 2
   modified_by 107 "spaghetty"
   // class settings
   //class diagram settings
@@ -341,7 +341,6 @@ ${inlines}
 	
 	
       end
-
     end
 
     class 128363 "sip_server"
@@ -378,6 +377,31 @@ ${inlines}
 
       classrelation 128491 // <composition>
 	relation_ref 128235 // <composition>
+      end
+
+      attribute 132075 "fqhn"
+	private explicit_type "string"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      operation 130795 "get_uri"
+	public explicit_return_type "string"
+	nparams 1
+	  param in name "bool" explicit_type "type"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
       end
     end
 
