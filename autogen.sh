@@ -2,5 +2,6 @@
 
 aclocal \
 && automake --add-missing \
+&& ./bootstrap \
 && autoconf
 
