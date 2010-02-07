@@ -6,6 +6,7 @@
 class sipServer
 {
  public:
+  sipServer(){};
   sipServer(const char*, const char* ="", int =5060);
   int get_port(){ return port; };
   std::string &get_ip(){ return ip; };
