@@ -31,5 +31,9 @@ AC_CHECK_HEADERS([stdlib.h string.h])
 AC_FUNC_MALLOC
 ACX_PTHREAD
 
+LTLIBOBJS=`echo "$LIBOBJS" | sed 's/\.o/.lo/g'`
+AC_SUBST(LTLIBOBJS)
+LTALLOCA=`echo "$ALLOCA" | sed 's/\.o/.lo/g'`
+AC_SUBST(LTALLOCA)
 
 AC_OUTPUT(Makefile src/Makefile examples/Makefile lib/Makefile)
