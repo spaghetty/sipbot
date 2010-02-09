@@ -17,3 +17,11 @@ THIS Project aims to create a full featured sip client
 	# src
 	# TODO
 	# VERSION
+
+# REMEMBER YOU NEED autoconf-archive (from nongnu stuff)
+
+on ubuntu:
+
+$ apt-get install autoconf-archive
+
+due to phtread stuff

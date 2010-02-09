@@ -1,16 +1,16 @@
 #ifndef tsip_ua
 #define tsup_ua
 
-#include <string.h>
+#include <string>
 
 class Ua{
-
+ public:
  protected:
-  string ip;
+  std::string ip;
   int port;
-  string d_proxy;
-  
-}
+  std::string d_proxy;
+ private:
+};
 
 
 #endif

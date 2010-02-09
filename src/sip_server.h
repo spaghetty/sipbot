@@ -11,6 +11,8 @@ class sipServer
   int get_port(){ return port; };
   std::string &get_ip(){ return ip; };
   std::string get_uri(bool);
+  int set_port(int p){ port = p; };
+  int set_ip(char *i){ ip.assign(i); };
  protected:
  private:
   std::string fqhn;
