@@ -32,3 +32,15 @@ of "acx_pthread.m4" macro in stuff dir.. so copy this file into m4 dir and run:
 $  aclocal --force -I m4
 
 if you are experiencing some other trouble try rerunning ./bootstrap
+
+#DEPENDENCIES
+
+./bootstrap needs "libtool"
+  on ubuntu:
+  sudo apt-get install libtool
+
+./configure needs "libsofia-sip-ua-dev"
+  on ubuntu:
+  sudo apt-get install libsofia-sip-ua-dev
+ 
+
