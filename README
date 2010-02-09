@@ -25,3 +25,10 @@ on ubuntu:
 $ apt-get install autoconf-archive
 
 due to phtread stuff
+
+if you can't fine autoconf-archive in your gnu/linux distribution i've just add a copy
+of "acx_pthread.m4" macro in stuff dir.. so copy this file into m4 dir and run:
+
+$  aclocal --force -I m4
+
+if you are experiencing some other trouble try rerunning ./bootstrap
