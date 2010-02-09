@@ -23,4 +23,3 @@ void Ua::set_proxy(const char *host, int port)
   proxy.set_port(port);
 }
 
-
