@@ -1,8 +1,13 @@
 #ifndef tsip_ua
-#define tsup_ua
+#define tsip_ua
 #include "sip_server.h"
-#include "gl_avltreehash_list.h"
+#include "line.h"
 #include <string>
+#include <map>
+
+using namespace std;
+
+typedef map<const char*, Line*> line_map_t;
 
 class Ua{
  public:
@@ -14,14 +19,15 @@ class Ua{
   const char *get_registrar(){ return registrar.get_uri(true).c_str(); };
 
   /* Line Related stuff */
-
+  int add_line(const char *user, const char *passwd);
+  void show_lines();
  protected:
   std::string bind_ip;
   int bind_port;
   std::string realm;
   sipServer registrar;
-  sipServer proxy;
-  gl_list_t lines;
+  sipServer proxy; 
+  line_map_t lines;
  private:
 };
 
