@@ -24,12 +24,25 @@ void Ua::set_proxy(const char *host, int port)
   proxy.set_port(port);
 }
 
-int Ua::add_line(const char *user, const char *passwd)
+bool Ua::add_line(const char *user, const char *passwd)
 {
+  pair<line_map_t::iterator,bool> ret;
   Line *l = new Line(this);
   l->set_info(user, passwd, realm.c_str(), proxy.get_uri(false).c_str());
-  lines.insert( make_pair(user,l));
-  return 1;
+  ret = lines.insert( make_pair(user,l));
+  return ret.second;
+}
+
+bool Ua::del_line(const char *key)
+{
+  bool ret = false;
+  line_map_t::iterator it = lines.find(key);
+  if( it != lines.end())
+    {
+      lines.erase(it);
+      ret = true;
+    }
+  return ret;
 }
 
 void Ua::show_lines()

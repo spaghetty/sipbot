@@ -19,7 +19,8 @@ class Ua{
   const char *get_registrar(){ return registrar.get_uri(true).c_str(); };
 
   /* Line Related stuff */
-  int add_line(const char *user, const char *passwd);
+  bool add_line(const char *user, const char *passwd);
+  bool del_line(const char *key);
   void show_lines();
  protected:
   std::string bind_ip;

@@ -11,8 +11,17 @@ int main(int argc, char* argv[])
   app.set_realm("spaghetty.net");
   app.set_proxy("192.168.1.109");
   printf("this is just setted proxy %s\n", app.get_proxy());
-  app.add_line("500","500");
+  if(app.add_line("500","500"))
+    app.show_lines();
+  printf("===================================\n");
+  if(app.add_line("500","500"))
+    printf("try to add 500 again");
+  app.add_line("600","600");
   app.show_lines();
+  printf("===================================\n");
+  app.del_line("500");
+  app.show_lines();
+  printf("===================================\n");
   /*clientEvent e1((event_type)25), e2((event_type)18);
   sipServer *s = new sipServer("prova", "");
   std::string a = s->get_uri(1);
