@@ -2,16 +2,21 @@
 #define tsip_ua
 #include "sip_server.h"
 #include "line.h"
+#include "base_event.h"
 #include <string>
 #include <map>
+#include <queue>
+#include <pthread.h>
 
 using namespace std;
 
 typedef map<const char*, Line*> line_map_t;
+typedef queue<baseEvent*> event_queue_t;
 
 class Ua{
  public:
   Ua(std::string bind="localhost", int port=5060);
+  ~Ua();
   void set_realm(const char*);
   void set_proxy(const char*, int port=5060);
   void set_registrar(const char*, int port=5060);
@@ -22,6 +27,9 @@ class Ua{
   bool add_line(const char *user, const char *passwd);
   bool del_line(const char *key);
   void show_lines();
+
+  
+
  protected:
   std::string bind_ip;
   int bind_port;
@@ -29,7 +37,11 @@ class Ua{
   sipServer registrar;
   sipServer proxy; 
   line_map_t lines;
+  event_queue_t events;
+
  private:
+  pthread_mutex_t lines_lock;
+  pthread_mutex_t event_lock;
 };
 
 

@@ -67,3 +67,15 @@ std::string Line::get_uri(bool with)
     }
   return res;
 };
+
+bool Line::register_it()
+{
+};
+
+bool Line::unregister_it()
+{
+};
+
+bool Line::generate_call(const char *dialstring)
+{
+}
