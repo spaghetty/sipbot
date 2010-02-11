@@ -115,8 +115,7 @@ void *Ua::event_loop(void *self)
     }
   pthread_cond_wait(&(This->events_ready), &(This->event_lock));
   pthread_mutex_unlock(&(This->event_lock));
-  //stop = false;
-  Ua::event_loop(This);
+  event_loop(This);
   return NULL;
 };
 
@@ -140,6 +139,7 @@ void *Ua::sip_driver(void *self)
 
 void *Ua::sip_loop_rand_event_gen()
 {
+
   add_event(new callEvent((event_type)(rand()%40)));
   if( state < 0)
     {
