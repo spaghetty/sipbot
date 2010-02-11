@@ -29,6 +29,7 @@ int main(int argc, char* argv[])
   app.del_line("500");
   app.show_lines();
   printf("===================================\n");
+  app.start_loop();
   sleep(1);
   app.stop_everithing();
   /*clientEvent e1((event_type)25), e2((event_type)18);

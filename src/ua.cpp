@@ -1,6 +1,7 @@
 #include "ua.h"
 #include "telephone_events.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 Ua::Ua(std::string bind, int port)
 {
@@ -13,7 +14,6 @@ Ua::Ua(std::string bind, int port)
   ret = pthread_mutex_init(&lines_lock, NULL);
   ret += pthread_mutex_init(&event_lock, NULL);
   pthread_cond_init(&events_ready, NULL);
-  pthread_create(&threads[0], NULL, &Ua::event_loop, (void *)this);
 };
 
 Ua::~Ua()
@@ -21,6 +21,13 @@ Ua::~Ua()
   pthread_mutex_destroy(&lines_lock);
   pthread_mutex_destroy(&event_lock);
   pthread_cond_destroy(&events_ready);
+};
+
+
+void Ua::start_loop()
+{
+  pthread_create(&threads[0], NULL, &Ua::event_loop, (void *)this);
+  pthread_create(&threads[1], NULL, &Ua::sip_driver, (void *)this);
 };
 
 void Ua::set_realm(const char *rm)
@@ -68,6 +75,7 @@ void Ua::stop_everithing()
 {
   printf("go on\n");
   int i;
+  state = -1;
   add_event(new clientEvent((event_type)EXIT));
   for(i=0; i<4; i++)
     {
@@ -97,7 +105,7 @@ void *Ua::event_loop(void *self)
     {
       baseEvent *e = (This->events).front();
       (This->events).pop();
-      printf ("frocio\n");
+      printf ("got event\n");
       exit = (EXIT == (e->getType()));
     }
   if(exit)
@@ -109,16 +117,33 @@ void *Ua::event_loop(void *self)
   pthread_cond_wait(&(This->events_ready), &(This->event_lock));
   pthread_mutex_unlock(&(This->event_lock));
   event_loop(This);
+  return NULL;
 };
 
 void Ua::add_event(baseEvent *e)
 {
   bool empty= false;
-  printf("ready to send signal\n");
   pthread_mutex_lock(&event_lock);
   empty = events.empty();
   events.push(e);
   pthread_cond_signal(&events_ready);
-  printf("signal sent\n");
   pthread_mutex_unlock(&event_lock);
+}
+
+void *Ua::sip_driver(void *self)
+{
+  Ua *This = static_cast<Ua*>(self);
+  This->sip_loop_rand_event_gen();
+  pthread_exit(NULL);
+}
+
+void *Ua::sip_loop_rand_event_gen()
+{
+  add_event(new clientEvent((event_type)(rand()%40)));
+  if( state < 0)
+    {
+      return NULL;
+    }
+  sleep(rand()%5);
+  sip_loop_rand_event_gen();
 }
