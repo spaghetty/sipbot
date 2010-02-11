@@ -1,6 +1,8 @@
 #ifndef tsip_ua
 #define tsip_ua
 #include "sip_server.h"
+#include "sip_driver.h"
+#include "sofia_driver.h"
 #include "line.h"
 #include "base_event.h"
 #include <string>
@@ -40,12 +42,14 @@ class Ua{
   sipServer proxy; 
   line_map_t lines;
   event_queue_t events;
+  
+  sipDriver *driver;
 
   /* multithreaded stuff */
   static void *event_loop(void *);
   static void *sip_driver(void *);
 
-  /* tmp stuff some just for funn */
+  /* tmp stuff some just for fun */
   void *sip_loop_rand_event_gen();
   /* end of tmp stuff this sould be removed soon */
 

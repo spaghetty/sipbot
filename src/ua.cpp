@@ -21,6 +21,7 @@ Ua::~Ua()
   pthread_mutex_destroy(&lines_lock);
   pthread_mutex_destroy(&event_lock);
   pthread_cond_destroy(&events_ready);
+  delete driver;
 };
 
 
@@ -133,6 +134,10 @@ void Ua::add_event(baseEvent *e)
 void *Ua::sip_driver(void *self)
 {
   Ua *This = static_cast<Ua*>(self);
+  // build url in the scheme of sip:ip:port
+  sipServer url((This->bind_ip).c_str(),"",This->bind_port);
+  This->driver = new sofiaDriver(This, url.get_uri(false).c_str(), 
+				 (This->proxy).get_uri(false).c_str());
   This->sip_loop_rand_event_gen();
   pthread_exit(NULL);
 }

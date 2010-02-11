@@ -1,0 +1,33 @@
+#ifndef tsip_sofia_driver
+#define tisp_sofia_driver
+
+#include "sip_driver.h"
+#include <sofia-sip/nua.h>
+
+class Ua;
+
+class sofiaDriver: public sipDriver
+{
+ public:
+  sofiaDriver(Ua *main_ua, const char *bind_url, const char *proxy);
+  ~sofiaDriver();
+ protected:
+  static void event_manager(nua_event_t, 
+			    int,
+			    const char*, 
+			    nua_t*, 
+			    nua_magic_t*, 
+			    nua_handle_t*, 
+			    nua_hmagic_t*, 
+			    const sip_t*, 
+			    tagi_t*);
+
+  su_home_t home[1];
+  su_root_t *root;
+  nua_t *nua;
+  nua_handle_t *handle;
+  Ua *ua;
+ private:
+};
+
+#endif
