@@ -30,5 +30,5 @@ int main(int argc, char* argv[])
   printf("===================================\n");
   app.start_loop();
   sleep(20);
-  app.stop_everithing();
+  app.stop_everything();
 }

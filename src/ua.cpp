@@ -71,7 +71,7 @@ bool Ua::del_line(const char *key)
   return ret;
 };
 
-void Ua::stop_everithing()
+void Ua::stop_everything()
 {
   printf("go on\n");
   int i;

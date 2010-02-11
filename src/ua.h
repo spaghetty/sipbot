@@ -29,7 +29,7 @@ class Ua{
   void show_lines();
 
   void add_event(baseEvent *);
-  void stop_everithing();
+  void stop_everything();
   void start_loop();
 
  protected:
