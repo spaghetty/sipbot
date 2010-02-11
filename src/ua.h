@@ -30,6 +30,7 @@ class Ua{
 
   void add_event(baseEvent *);
   void stop_everithing();
+  void start_loop();
 
  protected:
   std::string bind_ip;
@@ -40,13 +41,20 @@ class Ua{
   line_map_t lines;
   event_queue_t events;
 
+  /* multithreaded stuff */
   static void *event_loop(void *);
-  
+  static void *sip_driver(void *);
+
+  /* tmp stuff some just for funn */
+  void *sip_loop_rand_event_gen();
+  /* end of tmp stuff this sould be removed soon */
+
   /* sync stuff high dangerous */
   pthread_cond_t events_ready;
   pthread_mutex_t lines_lock;
   pthread_mutex_t event_lock;
   pthread_t threads[4];
+  int state;
  private:
 
 };

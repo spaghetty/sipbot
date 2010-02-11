@@ -14,7 +14,6 @@ int main(int argc, char* argv[])
   app.set_proxy("192.168.1.109");
   app.add_event(&e1);
   app.add_event(&e2);
-  app.add_event(&e5);
   app.add_event(&e3);
   app.add_event(&e4);
   printf("this is just setted proxy %s\n", app.get_proxy());
@@ -29,13 +28,7 @@ int main(int argc, char* argv[])
   app.del_line("500");
   app.show_lines();
   printf("===================================\n");
-  sleep(1);
+  app.start_loop();
+  sleep(20);
   app.stop_everithing();
-  /*clientEvent e1((event_type)25), e2((event_type)18);
-  sipServer *s = new sipServer("prova", "");
-  std::string a = s->get_uri(1);
-  l->set_info("500","500","192.168.1.109","prova.com");
-  delete s;
-  printf("uri %s \n",a.c_str());
-  printf("uri %s \n",l->get_uri(true).c_str()); */
 }
