@@ -28,7 +28,8 @@ class Ua{
   bool del_line(const char *key);
   void show_lines();
 
-  
+  void add_event(baseEvent *);
+  void stop_everithing();
 
  protected:
   std::string bind_ip;
@@ -39,9 +40,15 @@ class Ua{
   line_map_t lines;
   event_queue_t events;
 
- private:
+  static void *event_loop(void *);
+  
+  /* sync stuff high dangerous */
+  pthread_cond_t events_ready;
   pthread_mutex_t lines_lock;
   pthread_mutex_t event_lock;
+  pthread_t threads[4];
+ private:
+
 };
 
 

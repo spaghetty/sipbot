@@ -3,6 +3,7 @@
 
 typedef enum event_t{
   UNKNOWN=0,
+  EXIT=1,
   NEW_CALL=10,
   RINGING,
   HOLD_CALL,

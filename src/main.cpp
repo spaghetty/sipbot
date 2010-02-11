@@ -7,9 +7,16 @@
 
 int main(int argc, char* argv[])
 {
+  clientEvent e1((event_type)25), e2((event_type)18), e5(EXIT);
+  callEvent e3((event_type)30),e4((event_type)35);
   Ua app("localhost",5060);
   app.set_realm("spaghetty.net");
   app.set_proxy("192.168.1.109");
+  app.add_event(&e1);
+  app.add_event(&e2);
+  app.add_event(&e5);
+  app.add_event(&e3);
+  app.add_event(&e4);
   printf("this is just setted proxy %s\n", app.get_proxy());
   if(app.add_line("500","500"))
     app.show_lines();
@@ -22,6 +29,8 @@ int main(int argc, char* argv[])
   app.del_line("500");
   app.show_lines();
   printf("===================================\n");
+  sleep(1);
+  app.stop_everithing();
   /*clientEvent e1((event_type)25), e2((event_type)18);
   sipServer *s = new sipServer("prova", "");
   std::string a = s->get_uri(1);
