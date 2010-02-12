@@ -2,7 +2,7 @@
 #define tsip_ua
 #include "sip_server.h"
 #include "sip_driver.h"
-#include "sofia_driver.h"
+//#include "sofia_driver.h"
 #include "line.h"
 #include "base_event.h"
 #include <string>
@@ -29,12 +29,17 @@ class Ua{
   bool add_line(const char *user, const char *passwd);
   bool del_line(const char *key);
   void show_lines();
+  bool register_all();
 
   void add_event(baseEvent *);
   void stop_everything();
   void start_loop();
 
+  bool driver_ready;
+
  protected:
+  friend class Line;
+
   std::string bind_ip;
   int bind_port;
   std::string realm;
@@ -60,7 +65,6 @@ class Ua{
   pthread_t threads[4];
   int state;
  private:
-
 };
 
 

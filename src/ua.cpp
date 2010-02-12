@@ -1,5 +1,6 @@
 #include "ua.h"
 #include "telephone_events.h"
+#include "sofia_driver.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -9,6 +10,7 @@ Ua::Ua(std::string bind, int port)
   int i;
   bind_ip = bind;
   bind_port = port;
+  driver_ready = false;
   for( i=0; i < 4; i++)
     threads[i]=NULL;
   ret = pthread_mutex_init(&lines_lock, NULL);
@@ -77,6 +79,7 @@ void Ua::stop_everything()
   printf("go on\n");
   int i;
   state = -1;
+  driver->stop();
   add_event(new clientEvent((event_type)EXIT));
   for(i=0; i<4; i++)
     {
@@ -95,6 +98,22 @@ void Ua::show_lines()
     }
   pthread_mutex_unlock(&lines_lock);
 };
+
+bool Ua::register_all()
+{
+  if(driver_ready)
+    {
+      pthread_mutex_lock(&lines_lock);
+      line_map_t::iterator it = lines.begin();
+      for( it; it!=lines.end(); it++)
+	{
+	  ((*it).second)->register_it();
+	}
+      pthread_mutex_unlock(&lines_lock);
+      return true;
+    }
+  return false;
+}
 
 void *Ua::event_loop(void *self)
 {
@@ -136,9 +155,10 @@ void *Ua::sip_driver(void *self)
   Ua *This = static_cast<Ua*>(self);
   // build url in the scheme of sip:ip:port
   sipServer url((This->bind_ip).c_str(),"",This->bind_port);
-  This->driver = new sofiaDriver(This, url.get_uri(false).c_str(), 
-				 (This->proxy).get_uri(false).c_str());
-  This->sip_loop_rand_event_gen();
+  This->driver = new sofiaDriver(This, url.get_uri(true).c_str(), 
+				 (This->proxy).get_uri(true).c_str());
+  //This->sip_loop_rand_event_gen();
+  This->driver->start();
   pthread_exit(NULL);
 }
 

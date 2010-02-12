@@ -1,4 +1,5 @@
 #include "sofia_driver.h"
+#include "ua.h"
 
 sofiaDriver::sofiaDriver(Ua *main_ua, const char *url, const char* proxy)
 {
@@ -21,6 +22,34 @@ sofiaDriver::~sofiaDriver()
   su_deinit();
 }
 
+int sofiaDriver::start()
+{
+  ua->driver_ready=true;
+  su_root_run(root);
+  return 1;
+}
+
+void sofiaDriver::stop()
+{
+  nua_shutdown(nua);
+}
+
+int sofiaDriver::register_line(const char *display_name, const char *user_name, const char *registrar, const char *url, void **handler)
+{
+  nua_handle_t *hd = nua_handle(nua, NULL,
+				SIPTAG_TO_STR(url),
+				SIPTAG_FROM_STR(url),
+				TAG_END());
+  nua_register(hd,
+	       //NUTAG_M_DISPLAY(display_name),
+	       //NUTAG_M_USERNAME(user_name),
+	       NUTAG_REGISTRAR(registrar),
+	       NUTAG_KEEPALIVE_STREAM(0),
+	       TAG_END());
+  (*handler) = (void *) hd;
+  return 1;
+}
+
 void sofiaDriver::event_manager(nua_event_t event, 
 				int status,
 				const char *phrase, 
@@ -31,5 +60,27 @@ void sofiaDriver::event_manager(nua_event_t event,
 				const sip_t *sip, 
 				tagi_t *tags)
 {
-  printf("driver gets event\n");
+  sofiaDriver *This = (sofiaDriver *)magic;
+  switch (event){
+  case nua_r_shutdown:
+    if (status < 200) {
+      /* shutdown in progress -> return */
+      return;
+    }
+    su_root_break(This->root);
+    break;
+  case nua_r_register:
+    if(status >= 401 && status <= 407 )
+      {
+	printf("need auth\n");
+      }
+    if(status==200)
+      {
+	printf("everything right here around with register\n");
+      }
+    break;
+  default:
+    printf("driver gets event\n");
+    break;
+  }
 }

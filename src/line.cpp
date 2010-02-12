@@ -1,4 +1,5 @@
 #include "line.h"
+#include "ua.h"
 
 Line::Line(Ua *app)
 {
@@ -70,6 +71,22 @@ std::string Line::get_uri(bool with)
 
 bool Line::register_it()
 {
+  if(main_agent->driver != NULL)
+    {
+      std::string u = "<sip:";
+      u.append(uname);
+      u.append("@");
+      u.append((registrar->get_uri(false)).c_str());
+      u.append(">");
+      (main_agent->driver)->register_line(uname.c_str(),
+					  uname.c_str(),
+					  registrar->get_uri(true).c_str(),
+					  u.c_str(),
+					  &reg_handler);
+      return true;
+    }
+  return false;
+  
 };
 
 bool Line::unregister_it()

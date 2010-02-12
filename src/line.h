@@ -21,12 +21,14 @@ class Line
  protected:
   Line(Ua *);
   friend class Ua;
+  void *reg_handler;
  private:
 
   std::string uname;
   std::string passwd;
   std::string domain;
   std::string realm;
+  std::string url;
   sipServer *proxy;
   sipServer *registrar;
   Ua *main_agent;
