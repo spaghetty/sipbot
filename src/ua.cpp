@@ -83,7 +83,7 @@ void Ua::stop_everything()
   add_event(new clientEvent((event_type)EXIT));
   for(i=0; i<4; i++)
     {
-      if(NULL != threads[i])
+      if(threads[i])
 	pthread_join(threads[i],NULL);
     }
 };
