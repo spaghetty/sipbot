@@ -2,8 +2,13 @@
 
 baseEvent::baseEvent(event_type t, int start=0, int stop=100)
 {
-  if(t>start and t< stop)
+  if(t>=start and t<=stop)
     etype = t;
   else
     etype = (event_type)UNKNOWN;
+}
+
+bool baseEvent::is(event_type e)
+{
+  return (e==etype);
 }

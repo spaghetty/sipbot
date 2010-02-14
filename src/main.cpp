@@ -7,9 +7,9 @@
 
 int main(int argc, char* argv[])
 {
-  clientEvent e1((event_type)25), e2((event_type)18), e5(EXIT);
+  clientEvent e1((event_type)25), e2((event_type)18), e5(CLIENT_EXIT);
   callEvent e3((event_type)30),e4((event_type)35);
-  Ua app("192.168.64.224",5066);
+  Ua app("*",5066);
   app.set_realm("amati.delcospa.net");
   app.set_proxy("192.168.64.228");
   app.add_event(&e1);

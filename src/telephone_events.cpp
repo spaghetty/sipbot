@@ -1,7 +1,7 @@
 #include "telephone_events.h"
 
 clientEvent::clientEvent(event_type t):
-  baseEvent(t,0,20)
+  baseEvent(t,41,60)
 {
 }
 callEvent::callEvent(event_type t):

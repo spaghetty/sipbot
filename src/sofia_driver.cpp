@@ -1,4 +1,5 @@
 #include "sofia_driver.h"
+#include "telephone_events.h"
 #include "ua.h"
 
 sofiaDriver::sofiaDriver(Ua *main_ua, const char *url, const char* proxy)
@@ -24,7 +25,7 @@ sofiaDriver::~sofiaDriver()
 
 int sofiaDriver::start()
 {
-  ua->driver_ready=true;
+  ua->add_event(new clientEvent(DRIVER_READY));
   su_root_run(root);
   return 1;
 }

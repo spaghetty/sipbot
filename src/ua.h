@@ -5,6 +5,7 @@
 //#include "sofia_driver.h"
 #include "line.h"
 #include "base_event.h"
+#include "event_handler.h"
 #include <string>
 #include <map>
 #include <queue>
@@ -39,7 +40,7 @@ class Ua{
 
  protected:
   friend class Line;
-
+  friend class eventHandler;
   std::string bind_ip;
   int bind_port;
   std::string realm;
@@ -47,7 +48,7 @@ class Ua{
   sipServer proxy; 
   line_map_t lines;
   event_queue_t events;
-  
+  eventHandler *evh;
   sipDriver *driver;
 
   /* multithreaded stuff */

@@ -4,7 +4,7 @@
 
 class clientEvent: public baseEvent{
  public:
-  //events should be in [1,20]
+  //events should be in [41,60]
   clientEvent(event_type); 
  private:
 };
@@ -18,7 +18,7 @@ class callEvent: public baseEvent{
 
 class networkEvent: public baseEvent{
  public:
-  //events should be in [41,60]
+  //events should be in [1,20]
   networkEvent(event_type);
  private:
 };

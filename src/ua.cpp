@@ -11,6 +11,7 @@ Ua::Ua(std::string bind, int port)
   bind_ip = bind;
   bind_port = port;
   driver_ready = false;
+  evh = new eventHandler(this);
   for( i=0; i < 4; i++)
     threads[i]=NULL;
   ret = pthread_mutex_init(&lines_lock, NULL);
@@ -24,6 +25,7 @@ Ua::~Ua()
   pthread_mutex_destroy(&event_lock);
   pthread_cond_destroy(&events_ready);
   delete driver;
+  delete evh;
 };
 
 
@@ -80,7 +82,7 @@ void Ua::stop_everything()
   int i;
   state = -1;
   driver->stop();
-  add_event(new clientEvent((event_type)EXIT));
+  add_event(new clientEvent((event_type)CLIENT_EXIT));
   for(i=0; i<4; i++)
     {
       if(threads[i])
@@ -125,7 +127,8 @@ void *Ua::event_loop(void *self)
       baseEvent *e = (This->events).front();
       (This->events).pop();
       printf ("got event %d\n", (int)e->getType());
-      stop = (EXIT == (e->getType()));
+      This->evh->manage_event(e);
+      stop = (CLIENT_EXIT == (e->getType()));
     }
   if(stop)
     {
