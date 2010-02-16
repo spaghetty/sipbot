@@ -62,6 +62,17 @@ bool Ua::add_line(const char *user, const char *passwd)
   return ret.second;
 };
 
+Line *Ua::get_line(const char* key)
+{
+  Line *ret = NULL;
+  pthread_mutex_lock(&lines_lock);
+  line_map_t::iterator it = lines.find(key);
+  if ( it != lines.end())
+    ret = it->second;
+  pthread_mutex_unlock(&lines_lock);
+  return ret;
+}
+
 bool Ua::del_line(const char *key)
 {
   pthread_mutex_lock(&lines_lock);
@@ -96,7 +107,7 @@ void Ua::show_lines()
   line_map_t::iterator it = lines.begin();
   for( it; it!=lines.end(); it++)
     {
-      printf("uri %s \n",((*it).second)->get_uri(true).c_str());
+      printf("key:%s, uri %s \n",(*it).first.c_str(), ((*it).second)->get_uri(true).c_str());
     }
   pthread_mutex_unlock(&lines_lock);
 };

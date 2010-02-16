@@ -1,6 +1,7 @@
 #ifndef tsip_event_handler
 #define tsip_event_handler
 #include "base_event.h"
+#include "telephone_events.h"
 class Ua;
 
 class eventHandler
@@ -13,9 +14,9 @@ class eventHandler
   eventHandler(Ua*);
 
   bool manage_event(baseEvent*);
-  bool network_event(baseEvent *e);
-  bool client_event(baseEvent *e);
-  bool call_event(baseEvent *e);
+  bool network_event(networkEvent *e);
+  bool client_event(clientEvent *e);
+  bool call_event(callEvent *e);
  private:
   Ua *uagent;
 };

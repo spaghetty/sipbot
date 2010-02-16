@@ -7,12 +7,15 @@ typedef enum event_t{
   NETWORK_EVENT=1,
   NETWORK_FAIL=20,
   /* callEvent events should be in [21,40] */
-  NEW_CALL=10,
+  NEW_CALL=21,
   RINGING,
   HOLD_CALL,
   HELD_CALL,
   RELEASE_CALL,
   AUTH_REQUIRED,
+  REGISTER_START,
+  REGISTER_DONE,
+  REGISTER_FAIL,
   CALL_FAIL=40,
   /* client events should be in [41,60] */
   CLIENT_EXIT=41,

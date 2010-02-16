@@ -13,6 +13,16 @@ class callEvent: public baseEvent{
  public:
   //events should be in [21,40]
   callEvent(event_type);
+  callEvent(event_type, const char*, void *);
+
+  const char *get_identity();
+  void set_identity(const char *);
+
+  void *get_handler();
+  void set_handler(void *);
+ protected:
+  const char *identity;
+  void *handle;
  private:
 };
 

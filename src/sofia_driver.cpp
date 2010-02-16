@@ -35,19 +35,36 @@ void sofiaDriver::stop()
   nua_shutdown(nua);
 }
 
-int sofiaDriver::register_line(const char *display_name, const char *user_name, const char *registrar, const char *url, void **handler)
+int sofiaDriver::register_line(const char *display_name, const char *user_name, const char *registrar, const char *url)
 {
+  baseEvent *e = new callEvent(REGISTER_START);
   nua_handle_t *hd = nua_handle(nua, NULL,
 				SIPTAG_TO_STR(url),
 				SIPTAG_FROM_STR(url),
 				TAG_END());
   nua_register(hd,
 	       //NUTAG_M_DISPLAY(display_name),
-	       //NUTAG_M_USERNAME(user_name),
+	       NUTAG_M_USERNAME(user_name),
 	       NUTAG_REGISTRAR(registrar),
 	       NUTAG_KEEPALIVE_STREAM(0),
 	       TAG_END());
-  (*handler) = (void *) hd;
+  ((callEvent*)e)->set_identity((nua_handle_local(hd)->a_url)->url_user);
+  ((callEvent*)e)->set_handler((void*)hd);
+  ua->add_event(e);
+  return 1;
+}
+
+/* need to be in form "diget:<realm>:<user>:<passwd>" */
+int sofiaDriver::auth_dialog(const char *auth, void *dialog, const char *registrar)
+{
+  nua_handle_t *hd = NULL;
+  printf("merda\n");
+  hd = (nua_handle_t*)dialog;
+  nua_authenticate(hd,
+		   NUTAG_AUTH(auth),
+		   TAG_END());
+
+  printf("try to auth %s\n",(nua_handle_local(hd)->a_url)->url_user);
   return 1;
 }
 
@@ -73,7 +90,9 @@ void sofiaDriver::event_manager(nua_event_t event,
   case nua_r_register:
     if(status >= 401 && status <= 407 )
       {
-	printf("need auth\n");
+	This->ua->add_event(new callEvent(AUTH_REQUIRED,
+					 (nua_handle_local(nh)->a_url)->url_user,
+					 nh));
       }
     if(status==200)
       {

@@ -5,6 +5,7 @@
 #include <string>
 
 class Ua;
+class eventHandler;
 
 class Line
 {
@@ -17,11 +18,14 @@ class Line
   bool register_it();
   bool unregister_it();
   bool generate_call(const char *dialstring);
+  void auth_dialog(void *dialog);
 
  protected:
   Line(Ua *);
   friend class Ua;
+  friend class eventHandler;
   void *reg_handler;
+
  private:
 
   std::string uname;

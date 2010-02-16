@@ -13,7 +13,7 @@
 
 using namespace std;
 
-typedef map<const char*, Line*> line_map_t;
+typedef map<string, Line*> line_map_t;
 typedef queue<baseEvent*> event_queue_t;
 
 class Ua{
@@ -29,6 +29,7 @@ class Ua{
   /* Line Related stuff */
   bool add_line(const char *user, const char *passwd);
   bool del_line(const char *key);
+  Line *get_line(const char* key);
   void show_lines();
   bool register_all();
 

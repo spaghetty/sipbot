@@ -2,6 +2,7 @@
 #include "telephone_events.h"
 #include "ua.h"
 #include <stdio.h>
+#include <string.h>
 
 eventHandler::eventHandler(Ua *agent)
 {
@@ -19,19 +20,40 @@ bool eventHandler::manage_event(baseEvent *e)
   return true;
 }
 
-bool eventHandler::network_event(baseEvent *e)
+bool eventHandler::network_event(networkEvent *e)
 {
 }
 
-bool eventHandler::call_event(baseEvent *e)
+bool eventHandler::call_event(callEvent *e)
 {
+  if(e->is(REGISTER_START))
+    {
+      const char *key = e->get_identity();
+      Line *l=uagent->get_line(key);
+      if(l!=NULL)
+	{
+	  l->reg_handler = e->get_handler();
+	}
+    }
+  if(e->is(AUTH_REQUIRED))
+    {
+      const char *key = e->get_identity();
+      Line *l=uagent->get_line(key);
+      if(l!=NULL)
+	{
+	  if(l->reg_handler == e->get_handler())
+	    {
+	      l->auth_dialog(e->get_handler());
+	    }
+	}
+    }
 }
 
-bool eventHandler::client_event(baseEvent *e)
+bool eventHandler::client_event(clientEvent *e)
 {
   if(e->is(CLIENT_EXIT))
-      uagent->state = -1;
+    uagent->state = -1;
   if(e->is(DRIVER_READY))
-      uagent->driver_ready = 1;
+    uagent->driver_ready = 1;
   return true;
 }

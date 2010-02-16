@@ -81,17 +81,29 @@ bool Line::register_it()
       (main_agent->driver)->register_line(uname.c_str(),
 					  uname.c_str(),
 					  registrar->get_uri(true).c_str(),
-					  u.c_str(),
-					  &reg_handler);
+					  u.c_str());
+      //&reg_handler);
       return true;
     }
-  return false;
-  
+  return false;  
 };
 
 bool Line::unregister_it()
 {
 };
+
+void Line::auth_dialog(void *dialog)
+{
+  string auth = "digest:";
+  auth.append(domain);
+  auth.append(":");
+  auth.append(uname);
+  auth.append(":");
+  auth.append(passwd);
+  
+  main_agent->driver->auth_dialog(auth.c_str(),dialog, registrar->get_uri(true).c_str());
+
+}
 
 bool Line::generate_call(const char *dialstring)
 {
