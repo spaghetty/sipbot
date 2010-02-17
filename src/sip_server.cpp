@@ -12,7 +12,7 @@ sipServer::sipServer(const char *ip, const char *fqhn, int port)
 std::string sipServer::get_uri(bool type)
 {
   std::string s;
-   std::stringstream tmp;
+  std::stringstream tmp;
   if(type)
     s.append("sip:");
   if( fqhn.length() > 5 )

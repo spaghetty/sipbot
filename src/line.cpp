@@ -1,8 +1,11 @@
 #include "line.h"
 #include "ua.h"
+#include <sstream>
 
 Line::Line(Ua *app)
 {
+  std::stringstream tmp;
+  tmp << this;
   uname = "";
   passwd = "";
   domain = "localhost";
@@ -10,6 +13,7 @@ Line::Line(Ua *app)
   proxy = NULL;
   registrar = NULL;
   is_registered = 0;
+  line = tmp.str();
   main_agent = app;
 };
 
@@ -83,7 +87,8 @@ bool Line::register_it()
       (main_agent->driver)->register_line(uname.c_str(),
 					  uname.c_str(),
 					  registrar->get_uri(true).c_str(),
-					  u.c_str());
+					  u.c_str(),
+					  line.c_str());
       return true;
     }
   return false;  
@@ -115,11 +120,33 @@ string Line::get_auth()
 
 void Line::auth_dialog(void *dialog)
 {
-  
   main_agent->driver->auth_dialog(get_auth().c_str(),dialog, registrar->get_uri(true).c_str());
-
 }
 
 bool Line::generate_call(const char *dialstring)
 {
+  if(main_agent->driver != NULL)
+    {
+      is_registered = -1; // TRING //
+      std::string u = "<sip:";
+      u.append(uname);
+      u.append("@");
+      u.append((registrar->get_uri(false)).c_str());
+      u.append(">");
+
+      std::string dstring = dialstring;
+      size_t p = dstring.find("@");
+      if(p != std::string::npos)
+	{
+	  dstring.append("@");
+	  dstring.append(registrar->get_uri(false));
+	}
+      std::string d = "<sip:";
+      d.append(dstring);
+      d.append(">");
+      (main_agent->driver)->generate_call(uname.c_str(), d.c_str(), u.c_str(), line.c_str());
+      return true;
+    }
+  return false;  
+
 }

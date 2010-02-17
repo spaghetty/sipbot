@@ -37,8 +37,10 @@ void sofiaDriver::stop()
   nua_shutdown(nua);
 }
 
-int sofiaDriver::register_line(const char *display_name, const char *user_name, const char *registrar, const char *url)
+int sofiaDriver::register_line(const char *display_name, const char *user_name, const char *registrar, const char *url, const char *line)
 {
+  string param = "line=";
+  param.append(line);
   baseEvent *e = new callEvent(REGISTER_START);
   nua_handle_t *hd = nua_handle(nua, NULL,
 				SIPTAG_TO_STR(url),
@@ -47,6 +49,7 @@ int sofiaDriver::register_line(const char *display_name, const char *user_name, 
   nua_register(hd,
 	       //NUTAG_M_DISPLAY(display_name),
 	       NUTAG_M_USERNAME(user_name),
+	       NUTAG_M_PARAMS(param.c_str()),
 	       NUTAG_REGISTRAR(registrar),
 	       NUTAG_KEEPALIVE_STREAM(0),
 	       TAG_END());
@@ -76,6 +79,21 @@ int sofiaDriver::auth_dialog(const char *auth, void *dialog, const char *registr
 		   TAG_END());
   return 1;
 }
+
+int sofiaDriver::generate_call(const char *user_name, const char *dest, const char *from, const char *line)
+{
+  string param = "line=";
+  param.append(line);
+  baseEvent *e = new callEvent(REGISTER_START);
+  nua_handle_t *hd = nua_handle(nua, NULL,
+				SIPTAG_TO_STR(dest),
+				SIPTAG_FROM_STR(from),
+				TAG_END());
+  nua_invite(hd,
+	     NUTAG_M_USERNAME(user_name),
+	     NUTAG_MEDIA_ENABLE(0),
+	     TAG_END());
+};
 
 void sofiaDriver::event_manager(nua_event_t event, 
 				int status,
@@ -115,6 +133,12 @@ void sofiaDriver::event_manager(nua_event_t event,
 					  (nua_handle_local(nh)->a_url)->url_user,
 					  nh));
       }
+    break;
+  case nua_i_media_error:
+    printf("ma vaffanculo ai media\n");
+    break;
+  case nua_i_state:
+    printf("MA VAAFFANCULIO A I STATE\n");
     break;
   default:
     printf("driver gets event\n");

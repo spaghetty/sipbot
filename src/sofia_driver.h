@@ -19,11 +19,14 @@ class sofiaDriver: public sipDriver
   int register_line(const char *display_name, 
 		    const char *user_name, 
 		    const char *registrar,
-		    const char *url);
+		    const char *url,
+		    const char *line);
 
   int unregister_line(void *nh);
 
   int auth_dialog(const char *, void *dialog, const char*);
+
+  int generate_call(const char *display_name, const char *dest, const char *from, const char *line);
 
   /* end Driver stuff */
  protected:

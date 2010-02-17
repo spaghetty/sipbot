@@ -35,10 +35,13 @@ int main(int argc, char* argv[])
   
   while(! app.register_all())
     { sleep(0.5); }
-  sleep(10);
-  printf("bla\n");
+  sleep(2);
+  printf("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n");
+  /*
   while(!l->unregister_it())
     sleep(0.5);
-  sleep(20);
+  */
+  //l->generate_call("500@amati.delcospa.net");
+  sleep(30);
   app.stop_everything();
 }

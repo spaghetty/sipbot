@@ -35,6 +35,7 @@ class Line
   std::string domain;
   std::string realm;
   std::string url;
+  std::string line;
   sipServer *proxy;
   sipServer *registrar;
   Ua *main_agent;
