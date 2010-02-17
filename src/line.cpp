@@ -9,6 +9,7 @@ Line::Line(Ua *app)
   realm = "localhost";
   proxy = NULL;
   registrar = NULL;
+  is_registered = 0;
   main_agent = app;
 };
 
@@ -73,6 +74,7 @@ bool Line::register_it()
 {
   if(main_agent->driver != NULL)
     {
+      is_registered = -1; // TRING //
       std::string u = "<sip:";
       u.append(uname);
       u.append("@");
@@ -82,7 +84,6 @@ bool Line::register_it()
 					  uname.c_str(),
 					  registrar->get_uri(true).c_str(),
 					  u.c_str());
-      //&reg_handler);
       return true;
     }
   return false;  
@@ -90,18 +91,32 @@ bool Line::register_it()
 
 bool Line::unregister_it()
 {
+  if(reg_handler and is_registered == 1)
+    {
+      (main_agent->driver)->unregister_line(reg_handler);
+      return true;
+    }
+  return false;
 };
 
-void Line::auth_dialog(void *dialog)
+string Line::get_auth()
 {
   string auth = "digest:";
+  auth.append("\"");
   auth.append(domain);
+  auth.append("\"");
   auth.append(":");
   auth.append(uname);
   auth.append(":");
   auth.append(passwd);
+
+  return auth;
+};
+
+void Line::auth_dialog(void *dialog)
+{
   
-  main_agent->driver->auth_dialog(auth.c_str(),dialog, registrar->get_uri(true).c_str());
+  main_agent->driver->auth_dialog(get_auth().c_str(),dialog, registrar->get_uri(true).c_str());
 
 }
 

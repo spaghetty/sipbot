@@ -19,15 +19,17 @@ class Line
   bool unregister_it();
   bool generate_call(const char *dialstring);
   void auth_dialog(void *dialog);
-
+  int get_register_status(){ return is_registered; }
+;
  protected:
   Line(Ua *);
   friend class Ua;
   friend class eventHandler;
   void *reg_handler;
+  std::string get_auth();
+  int is_registered;
 
  private:
-
   std::string uname;
   std::string passwd;
   std::string domain;

@@ -47,6 +47,15 @@ bool eventHandler::call_event(callEvent *e)
 	    }
 	}
     }
+  if(e->is(REGISTER_DONE))
+    {
+      const char *key = e->get_identity();
+      Line *l=uagent->get_line(key);
+      if(l!=NULL)
+	{
+	  l->is_registered = 1; // succesfull registered //
+	}
+    }
 }
 
 bool eventHandler::client_event(clientEvent *e)

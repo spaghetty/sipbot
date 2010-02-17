@@ -1,11 +1,13 @@
 #include "sofia_driver.h"
 #include "telephone_events.h"
 #include "ua.h"
+#include <sofia-sip/su_log.h>
 
 sofiaDriver::sofiaDriver(Ua *main_ua, const char *url, const char* proxy)
 {
   ua = main_ua;
   su_home_init(home);
+  su_log_set_level (su_log_default, 9);
   root = su_root_create(this); /* this is what we will get in magic */
   nua = nua_create(root,     /* Event loop */                             
 		   (event_manager), /* Callback for processing events*/  
@@ -54,17 +56,24 @@ int sofiaDriver::register_line(const char *display_name, const char *user_name, 
   return 1;
 }
 
+int sofiaDriver::unregister_line(void *dialog)
+{
+  nua_handle_t *hd = NULL;
+  hd = (nua_handle_t*)dialog;
+  nua_unregister(hd,
+		 SIPTAG_EXPIRES(0), 
+		 TAG_END());
+  return 1;
+}
+
 /* need to be in form "diget:<realm>:<user>:<passwd>" */
 int sofiaDriver::auth_dialog(const char *auth, void *dialog, const char *registrar)
 {
   nua_handle_t *hd = NULL;
-  printf("merda\n");
   hd = (nua_handle_t*)dialog;
   nua_authenticate(hd,
 		   NUTAG_AUTH(auth),
 		   TAG_END());
-
-  printf("try to auth %s\n",(nua_handle_local(hd)->a_url)->url_user);
   return 1;
 }
 
@@ -91,12 +100,20 @@ void sofiaDriver::event_manager(nua_event_t event,
     if(status >= 401 && status <= 407 )
       {
 	This->ua->add_event(new callEvent(AUTH_REQUIRED,
-					 (nua_handle_local(nh)->a_url)->url_user,
-					 nh));
+					  (nua_handle_local(nh)->a_url)->url_user,
+					  nh));
       }
     if(status==200)
       {
-	printf("everything right here around with register\n");
+	This->ua->add_event(new callEvent(REGISTER_DONE,
+					  (nua_handle_local(nh)->a_url)->url_user,
+					  nh));
+      }
+    if(status >= 500 )
+      {
+	This->ua->add_event(new callEvent(REGISTER_FAIL,
+					  (nua_handle_local(nh)->a_url)->url_user,
+					  nh));
       }
     break;
   default:
