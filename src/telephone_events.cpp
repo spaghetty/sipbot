@@ -2,11 +2,11 @@
 #include <stdio.h>
 
 clientEvent::clientEvent(event_type t):
-  baseEvent(t,41,60)
+  baseEvent(t,CLIENT_EXIT,CLIENT_FAIL)
 {
 }
 callEvent::callEvent(event_type t):
-  baseEvent(t,21,40)
+  baseEvent(t,NEW_CALL,REGISTER_FAIL)
 {
   identity=NULL;
 }
@@ -16,6 +16,19 @@ callEvent::callEvent(event_type t, const char *id, void *h):
 {
   identity=id;
   handle=h;
+  direction = 0;
+}
+
+incomingCallEvent::incomingCallEvent(event_type t, const char *id, void *h):
+  callEvent(t,id,h)
+{
+  direction= -1;
+}
+
+outgoingCallEvent::outgoingCallEvent(event_type t, const char *id, void *h):
+  callEvent(t,id,h)
+{
+  direction = 1;
 }
 
 void callEvent::set_identity(const char *i)
@@ -38,7 +51,7 @@ void callEvent::set_handler(void *h)
 }
 
 networkEvent::networkEvent(event_type t):
-  baseEvent(t,0,20)
+  baseEvent(t,NETWORK_EVENT,NETWORK_FAIL)
 {
 }
 

@@ -6,21 +6,23 @@ typedef enum event_t{
   /* network events should be in [1,20] */
   NETWORK_EVENT=1,
   NETWORK_FAIL=20,
-  /* callEvent events should be in [21,40] */
+  /* callEvent events should be in [21,60] */
+  /* specific releted to call [21,40] */
   NEW_CALL=21,
   RINGING,
   HOLD_CALL,
   HELD_CALL,
   RELEASE_CALL,
+  CALL_FAIL=40,
   AUTH_REQUIRED,
   REGISTER_START,
   REGISTER_DONE,
-  REGISTER_FAIL,
-  CALL_FAIL=40,
-  /* client events should be in [41,60] */
-  CLIENT_EXIT=41,
+  REGISTER_FAIL=60,  
+  /* generic signalig stuff [41,60] */
+  /* client events should be in [61,80] */
+  CLIENT_EXIT=61,
   DRIVER_READY,
-  CLIENT_FAIL=60,
+  CLIENT_FAIL=80,
 } event_type;
 
 class baseEvent{

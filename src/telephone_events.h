@@ -23,6 +23,23 @@ class callEvent: public baseEvent{
  protected:
   const char *identity;
   void *handle;
+  int direction;
+ private:
+};
+
+class incomingCallEvent: public callEvent
+{
+ public:
+  incomingCallEvent(event_type, const char*, void *);;
+ protected:
+ private:
+};
+
+class outgoingCallEvent: public callEvent
+{
+ public:
+  outgoingCallEvent(event_type, const char*, void *);;
+ protected:
  private:
 };
 

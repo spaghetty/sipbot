@@ -134,6 +134,17 @@ void sofiaDriver::event_manager(nua_event_t event,
 					  nh));
       }
     break;
+  case nua_r_invite:
+    This->ua->add_event(new outgoingCallEvent(NEW_CALL,
+					      (nua_handle_local(nh)->a_url)->url_user,
+					      nh));
+    break;
+    case nua_i_invite:
+      This->ua->add_event(new incomingCallEvent(NEW_CALL,
+						(nua_handle_local(nh)->a_url)->url_user,
+						nh));
+      /* try sending invite here */
+      break;
   case nua_i_media_error:
     printf("ma vaffanculo ai media\n");
     break;
