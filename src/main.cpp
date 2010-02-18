@@ -41,7 +41,8 @@ int main(int argc, char* argv[])
   while(!l->unregister_it())
     sleep(0.5);
   */
-  //l->generate_call("500@amati.delcospa.net");
+  l->generate_call("500@amati.delcospa.net");
+  l->generate_call("503@amati.delcospa.net");
   sleep(30);
   app.stop_everything();
 }

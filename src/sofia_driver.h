@@ -1,16 +1,20 @@
-
 #ifndef tsip_sofia_driver
 #define tisp_sofia_driver
 
 #include "sip_driver.h"
+#include "call.h"
 #include <sofia-sip/nua.h>
+#include <map>
+#include <string>
+
+typedef std::map<std::string, Call*> call_map_t;
 
 class Ua;
 
 class sofiaDriver: public sipDriver
 {
  public:
-  sofiaDriver(Ua *main_ua, const char *bind_url, const char *proxy);
+  sofiaDriver(Ua *main_ua, const char *bind_url, const char *proxy, int max);
   ~sofiaDriver();
   
   /* Driver inteface function */
@@ -40,9 +44,12 @@ class sofiaDriver: public sipDriver
 			    const sip_t*, 
 			    tagi_t*);
 
+  Call *add_call(const char *id);
+  Call *delete_call(const char *id);
   void app_shutdown();
   su_home_t home[1];
   su_root_t *root;
+  call_map_t *calls;
   nua_t *nua;
   nua_handle_t *handle;
   Ua *ua;

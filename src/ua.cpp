@@ -169,7 +169,8 @@ void *Ua::sip_driver(void *self)
   // build url in the scheme of sip:ip:port
   sipServer url((This->bind_ip).c_str(),"",This->bind_port);
   This->driver = new sofiaDriver(This, url.get_uri(true).c_str(), 
-				 (This->proxy).get_uri(true).c_str());
+				 (This->proxy).get_uri(true).c_str(),
+				 2);
   //This->sip_loop_rand_event_gen();
   This->driver->start();
   pthread_exit(NULL);

@@ -1,5 +1,13 @@
 bin_PROGRAMS = tsip
-tsip_SOURCES = main.cpp base_event.cpp telephone_events.cpp sip_server.cpp line.cpp ua.cpp event_handler.cpp sofia_driver.cpp
+tsip_SOURCES = main.cpp \
+		call.cpp \
+		base_event.cpp \
+		telephone_events.cpp \
+		sip_server.cpp \
+		line.cpp \
+		ua.cpp \
+		event_handler.cpp \
+		sofia_driver.cpp 
 
 tsip_LDADD = $(SOFIA_SIP_UA_LIBS) $(LTLIBINTL)
 tsip_LIBS = ../lib/libgnu.a

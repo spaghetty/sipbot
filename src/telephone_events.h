@@ -1,6 +1,8 @@
-#include "base_event.h"
 #ifndef tsip_event_telephone
 #define tsip_event_telephone
+
+#include "call.h"
+#include "base_event.h"
 
 class clientEvent: public baseEvent{
  public:
@@ -31,7 +33,9 @@ class incomingCallEvent: public callEvent
 {
  public:
   incomingCallEvent(event_type, const char*, void *);;
+  Call *get_context(){ return context; };
  protected:
+  Call *context;
  private:
 };
 
@@ -39,7 +43,9 @@ class outgoingCallEvent: public callEvent
 {
  public:
   outgoingCallEvent(event_type, const char*, void *);;
+  Call *get_context(){ return context; };
  protected:
+  Call *context;
  private:
 };
 

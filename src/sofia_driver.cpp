@@ -3,11 +3,12 @@
 #include "ua.h"
 #include <sofia-sip/su_log.h>
 
-sofiaDriver::sofiaDriver(Ua *main_ua, const char *url, const char* proxy)
+sofiaDriver::sofiaDriver(Ua *main_ua, const char *url, const char* proxy, int max):
+  sipDriver(max)
 {
   ua = main_ua;
   su_home_init(home);
-  su_log_set_level (su_log_default, 9);
+  su_log_set_level (su_log_default, 0);
   root = su_root_create(this); /* this is what we will get in magic */
   nua = nua_create(root,     /* Event loop */                             
 		   (event_manager), /* Callback for processing events*/  
@@ -15,7 +16,15 @@ sofiaDriver::sofiaDriver(Ua *main_ua, const char *url, const char* proxy)
 		   NUTAG_URL(url),                                             
 		   NUTAG_PROXY(proxy),                                         
 		   TAG_END());    /* should always finish the sequence */
-}
+};
+
+Call *sofiaDriver::add_call(const char *id)
+{
+};
+
+Call *sofiaDriver::delete_call(const char *id)
+{
+};
 
 sofiaDriver::~sofiaDriver()
 {
@@ -23,7 +32,7 @@ sofiaDriver::~sofiaDriver()
   su_root_destroy(root);
   su_home_deinit(home);
   su_deinit();
-}
+};
 
 int sofiaDriver::start()
 {
@@ -136,16 +145,24 @@ void sofiaDriver::event_manager(nua_event_t event,
       }
     break;
   case nua_r_invite:
+    {
+    printf("statusssssssssss %d\n",status);
     This->ua->add_event(new outgoingCallEvent(NEW_CALL,
 					      (nua_handle_local(nh)->a_url)->url_user,
 					      nh));
+    Call *c = new Call(sip->sip_call_id->i_id,nh);
+    if(!c->check_count(2))
+      {
+	printf("so cazzi %s\n",sip->sip_call_id->i_id);
+      }
     break;
-    case nua_i_invite:
-      This->ua->add_event(new incomingCallEvent(NEW_CALL,
-						(nua_handle_local(nh)->a_url)->url_user,
-						nh));
-      /* try sending invite here */
-      break;
+    }
+  case nua_i_invite:
+    This->ua->add_event(new incomingCallEvent(NEW_CALL,
+					      (nua_handle_local(nh)->a_url)->url_user,
+					      nh));
+    /* try sending invite here */
+    break;
   case nua_i_media_error:
     printf("ma vaffanculo ai media\n");
     break;
