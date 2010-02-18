@@ -104,11 +104,11 @@ void Ua::stop_everything()
 void Ua::show_lines()
 {
   pthread_mutex_lock(&lines_lock);
-  line_map_t::iterator it = lines.begin();
-  for( it; it!=lines.end(); it++)
-    {
-      printf("key:%s, uri %s \n",(*it).first.c_str(), ((*it).second)->get_uri(true).c_str());
-    }
+
+  for(line_map_t::iterator it = lines.begin(); it != lines.end(); it++)
+    printf("key:%s, uri %s \n", (*it).first.c_str(),
+           ((*it).second)->get_uri(true).c_str());
+
   pthread_mutex_unlock(&lines_lock);
 };
 
@@ -117,11 +117,10 @@ bool Ua::register_all()
   if(driver_ready)
     {
       pthread_mutex_lock(&lines_lock);
-      line_map_t::iterator it = lines.begin();
-      for( it; it!=lines.end(); it++)
-	{
-	  ((*it).second)->register_it();
-	}
+
+      for(line_map_t::iterator it = lines.begin(); it != lines.end(); it++)
+        ((*it).second)->register_it();
+
       pthread_mutex_unlock(&lines_lock);
       return true;
     }
@@ -181,9 +180,9 @@ void *Ua::sip_loop_rand_event_gen()
 
   add_event(new callEvent((event_type)(rand()%40)));
   if( state < 0)
-    {
-      return NULL;
-    }
+    return NULL;
+
   sleep((rand()%5)/1000);
   sip_loop_rand_event_gen();
+  return NULL;
 }

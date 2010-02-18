@@ -11,8 +11,8 @@ class sipServer
   int get_port(){ return port; };
   std::string &get_ip(){ return ip; };
   std::string get_uri(bool);
-  int set_port(int p){ port = p; };
-  int set_ip(const char *i){ ip.assign(i); };
+  void set_port(int p){ port = p;};
+  void set_ip(const char *i){ ip.assign(i); };
   bool is_empty() { return ip.length()==0; };
  protected:
  private:

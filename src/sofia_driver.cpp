@@ -84,7 +84,6 @@ int sofiaDriver::generate_call(const char *user_name, const char *dest, const ch
 {
   string param = "line=";
   param.append(line);
-  baseEvent *e = new callEvent(REGISTER_START);
   nua_handle_t *hd = nua_handle(nua, NULL,
 				SIPTAG_TO_STR(dest),
 				SIPTAG_FROM_STR(from),
@@ -93,6 +92,8 @@ int sofiaDriver::generate_call(const char *user_name, const char *dest, const ch
 	     NUTAG_M_USERNAME(user_name),
 	     NUTAG_MEDIA_ENABLE(0),
 	     TAG_END());
+
+  return 0;
 };
 
 void sofiaDriver::event_manager(nua_event_t event, 

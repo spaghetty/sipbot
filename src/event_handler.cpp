@@ -22,6 +22,7 @@ bool eventHandler::manage_event(baseEvent *e)
 
 bool eventHandler::network_event(networkEvent *e)
 {
+  return true;
 }
 
 bool eventHandler::call_event(callEvent *e)
@@ -56,6 +57,7 @@ bool eventHandler::call_event(callEvent *e)
 	  l->is_registered = 1; // succesfull registered //
 	}
     }
+  return true;
 }
 
 bool eventHandler::client_event(clientEvent *e)
