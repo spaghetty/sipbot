@@ -56,10 +56,6 @@ class Ua{
   static void *event_loop(void *);
   static void *sip_driver(void *);
 
-  /* tmp stuff some just for fun */
-  void *sip_loop_rand_event_gen();
-  /* end of tmp stuff this sould be removed soon */
-
   /* sync stuff high dangerous */
   pthread_cond_t events_ready;
   pthread_mutex_t lines_lock;

@@ -174,15 +174,3 @@ void *Ua::sip_driver(void *self)
   This->driver->start();
   pthread_exit(NULL);
 }
-
-void *Ua::sip_loop_rand_event_gen()
-{
-
-  add_event(new callEvent((event_type)(rand()%40)));
-  if( state < 0)
-    return NULL;
-
-  sleep((rand()%5)/1000);
-  sip_loop_rand_event_gen();
-  return NULL;
-}
