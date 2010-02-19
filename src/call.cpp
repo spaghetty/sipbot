@@ -4,11 +4,10 @@
 
 int Call::count = 0;
 
-Call::Call(const char *id, void *dg)
+Call::Call(const char *id)
 {
   Call::count++;
   callid = id;
-  dialog = dg;
 };
 
 Call::~Call()

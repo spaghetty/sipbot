@@ -4,7 +4,7 @@
 class Call
 {
  public:
-  Call(const char *id, void *dg);
+  Call(const char *id);
   ~Call();
   bool check_count(int max);
   void  print_count();

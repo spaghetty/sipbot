@@ -49,7 +49,7 @@ class sofiaDriver: public sipDriver
   void app_shutdown();
   su_home_t home[1];
   su_root_t *root;
-  call_map_t *calls;
+  call_map_t calls;
   nua_t *nua;
   nua_handle_t *handle;
   Ua *ua;

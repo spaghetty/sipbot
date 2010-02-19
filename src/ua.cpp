@@ -58,6 +58,8 @@ bool Ua::add_line(const char *user, const char *passwd)
   Line *l = new Line(this);
   l->set_info(user, passwd, realm.c_str(), proxy.get_uri(false).c_str());
   ret = lines.insert( make_pair(user,l));
+  if(!(ret.second))
+    delete l;
   pthread_mutex_unlock(&lines_lock);
   return ret.second;
 };

@@ -20,10 +20,20 @@ sofiaDriver::sofiaDriver(Ua *main_ua, const char *url, const char* proxy, int ma
 
 Call *sofiaDriver::add_call(const char *id)
 {
+  pair<call_map_t::iterator,bool> ret;
+  Call *c = new Call(id);
+  ret = calls.insert( make_pair(id,c));
+  if(!(ret.second))
+    delete c;
+  return (*(ret.first)).second;
 };
 
 Call *sofiaDriver::delete_call(const char *id)
 {
+  call_map_t::iterator it = calls.find(id);
+  if (it != calls.end())
+    calls.erase(it);
+  return (*(it)).second;
 };
 
 sofiaDriver::~sofiaDriver()
@@ -150,7 +160,7 @@ void sofiaDriver::event_manager(nua_event_t event,
     This->ua->add_event(new outgoingCallEvent(NEW_CALL,
 					      (nua_handle_local(nh)->a_url)->url_user,
 					      nh));
-    Call *c = new Call(sip->sip_call_id->i_id,nh);
+    Call *c = new Call(sip->sip_call_id->i_id);
     if(!c->check_count(2))
       {
 	printf("so cazzi %s\n",sip->sip_call_id->i_id);
