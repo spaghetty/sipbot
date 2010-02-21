@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 clientEvent::clientEvent(event_type t):
-  baseEvent(t,CLIENT_EXIT,CLIENT_FAIL)
+   baseEvent(t,CLIENT_EXIT,CLIENT_FAIL)
 {
 }
 callEvent::callEvent(event_type t):
@@ -12,7 +12,7 @@ callEvent::callEvent(event_type t):
 }
 
 callEvent::callEvent(event_type t, const char *id, void *h):
-  baseEvent(t,21,40)
+  baseEvent(t,NEW_CALL,CALL_FAIL)
 {
   identity=id;
   handle=h;
