@@ -1,0 +1,7 @@
+<map id="G" name="G">
+<area shape="rect" href="$classcallEvent.html" title="{callEvent\n|# identity\l# handle\l# direction\l|+ callEvent()\l+ callEvent()\l+ get_identity()\l+ set_identity()\l+ get_handler()\l+ set_handler()\l}" alt="" coords="109,197,216,416"/>
+<area shape="rect" href="$classclientEvent.html" title="{clientEvent\n||+ clientEvent()\l}" alt="" coords="240,263,344,351"/>
+<area shape="rect" href="$classnetworkEvent.html" title="{networkEvent\n||+ networkEvent()\l}" alt="" coords="368,263,488,351"/>
+<area shape="rect" href="$classincomingCallEvent.html" title="{incomingCallEvent\n|# context\l|+ incomingCallEvent()\l+ get_context()\l}" alt="" coords="5,464,152,571"/>
+<area shape="rect" href="$classoutgoingCallEvent.html" title="{outgoingCallEvent\n|# context\l|+ outgoingCallEvent()\l+ get_context()\l}" alt="" coords="176,464,320,571"/>
+</map>

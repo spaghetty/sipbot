@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" href="$classeventHandler.html" title="{eventHandler\n|&#45; uagent\l|# eventHandler()\l# manage_event()\l# network_event()\l# client_event()\l# call_event()\l}" alt="" coords="57,1061,183,1224"/>
+<area shape="rect" href="$classsipServer.html" title="{sipServer\n|&#45; fqhn\l&#45; ip\l&#45; port\l|+ sipServer()\l+ sipServer()\l+ get_port()\l+ get_ip()\l+ get_uri()\l+ set_port()\l+ set_ip()\l+ is_empty()\l}" alt="" coords="5,5,101,261"/>
+<area shape="rect" href="$classsipDriver.html" title="{sipDriver\n|# max_call\l|+ sipDriver()\l+ start()\l+ stop()\l+ register_line()\l+ unregister_line()\l+ auth_dialog()\l+ generate_call()\l}" alt="" coords="125,33,251,233"/>
+</map>

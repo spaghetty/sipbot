@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" href="$classcallEvent.html" title="{callEvent\n|# identity\l# handle\l# direction\l|+ callEvent()\l+ callEvent()\l+ get_identity()\l+ set_identity()\l+ get_handler()\l+ set_handler()\l}" alt="" coords="5,200,112,419"/>
+<area shape="rect" href="$classbaseEvent.html" title="{baseEvent\n|# etype\l|+ baseEvent()\l+ getType()\l+ is()\l# baseEvent()\l}" alt="" coords="8,5,109,149"/>
+<area shape="rect" href="$classCall.html" title="{Call\n|+ count\l# callid\l# dialog\l|+ Call()\l+ ~Call()\l+ check_count()\l+ print_count()\l}" alt="" coords="136,219,251,400"/>
+</map>

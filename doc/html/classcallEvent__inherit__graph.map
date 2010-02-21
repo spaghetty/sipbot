@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" href="$classincomingCallEvent.html" title="{incomingCallEvent\n|# context\l|+ incomingCallEvent()\l+ get_context()\l}" alt="" coords="5,464,152,571"/>
+<area shape="rect" href="$classoutgoingCallEvent.html" title="{outgoingCallEvent\n|# context\l|+ outgoingCallEvent()\l+ get_context()\l}" alt="" coords="176,464,320,571"/>
+<area shape="rect" href="$classbaseEvent.html" title="{baseEvent\n|# etype\l|+ baseEvent()\l+ getType()\l+ is()\l# baseEvent()\l}" alt="" coords="112,5,213,149"/>
+</map>
