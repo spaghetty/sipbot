@@ -2,6 +2,7 @@
 #include "telephone_events.h"
 #include "ua.h"
 #include <sofia-sip/su_log.h>
+#include <sofia-sip/nua_tag.h>
 
 sofiaDriver::sofiaDriver(Ua *main_ua, const char *url, const char* proxy, int max):
   sipDriver(max)
@@ -111,7 +112,6 @@ int sofiaDriver::generate_call(const char *user_name, const char *dest, const ch
 	     NUTAG_M_USERNAME(user_name),
 	     NUTAG_MEDIA_ENABLE(0),
 	     TAG_END());
-
   return 0;
 };
 
@@ -157,13 +157,21 @@ void sofiaDriver::event_manager(nua_event_t event,
   case nua_r_invite:
     {
     printf("statusssssssssss %d\n",status);
-    This->ua->add_event(new outgoingCallEvent(NEW_CALL,
-					      (nua_handle_local(nh)->a_url)->url_user,
-					      nh));
-    Call *c = new Call(sip->sip_call_id->i_id);
-    if(!c->check_count(2))
+    if (status >= 100 && status < 200)
       {
-	printf("so cazzi %s\n",sip->sip_call_id->i_id);
+	This->ua->add_event(new outgoingCallEvent(NEW_CALL,
+						  (nua_handle_local(nh)->a_url)->url_user,
+						  nh));
+      }
+    if ( status >= 200 && status < 300 )
+      {
+	/* i got a reply so cool */
+      }
+    if( status >= 400 && status < 500 )
+      {
+	This->ua->add_event(new outgoingCallEvent(CALL_FAIL,
+						  (nua_handle_local(nh)->a_url)->url_user,
+						  nh));
       }
     break;
     }
@@ -177,8 +185,29 @@ void sofiaDriver::event_manager(nua_event_t event,
     printf("ma vaffanculo ai media\n");
     break;
   case nua_i_state:
-    printf("MA VAAFFANCULIO A I STATE\n");
-    break;
+    {
+      //nua_callstate state = nua_callstate_init;
+      int state;
+      tl_gets(tags, 
+	      NUTAG_CALLSTATE_REF(state),
+	      TAG_END());
+      Call *c = This->add_call(sip->sip_call_id->i_id);
+      if(!c->check_count(This->max_call))
+	{
+	  /* send cancel */
+	  if(((nua_callstate)state) == nua_callstate_calling)
+	    {
+	    }
+	  printf("so cazzi %s\n",sip->sip_call_id->i_id);
+	}
+      else
+	{
+	  /* let go on */
+	  printf("questa la mandiamo su\n");
+	}
+      printf("call %s\n", nua_callstate_name((nua_callstate)state));
+      break;
+    }
   default:
     printf("driver gets event\n");
     break;

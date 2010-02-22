@@ -4,12 +4,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-Ua::Ua(std::string bind, int port)
+Ua::Ua(std::string bind, int port, int max_c)
 {
   int ret;
   int i;
   bind_ip = bind;
   bind_port = port;
+  max_call = max_c;
   driver_ready = false;
   evh = new eventHandler(this);
   for( i=0; i < 4; i++)

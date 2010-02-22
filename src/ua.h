@@ -10,6 +10,7 @@
 #include <map>
 #include <queue>
 #include <pthread.h>
+#include <limits.h>
 
 using namespace std;
 
@@ -18,7 +19,7 @@ typedef queue<baseEvent*> event_queue_t;
 
 class Ua{
  public:
-  Ua(std::string bind="localhost", int port=5060);
+  Ua(std::string bind="localhost", int port=5060, int max_line=INT_MAX);
   ~Ua();
   void set_realm(const char*);
   void set_proxy(const char*, int port=5060);
@@ -44,6 +45,7 @@ class Ua{
   friend class eventHandler;
   std::string bind_ip;
   int bind_port;
+  int max_call;
   std::string realm;
   sipServer registrar;
   sipServer proxy; 
