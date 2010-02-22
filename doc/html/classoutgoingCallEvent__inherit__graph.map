@@ -1,4 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" href="$classcallEvent.html" title="{callEvent\n|# identity\l# handle\l# direction\l|+ callEvent()\l+ callEvent()\l+ get_identity()\l+ set_identity()\l+ get_handler()\l+ set_handler()\l}" alt="" coords="24,197,131,416"/>
-<area shape="rect" href="$classbaseEvent.html" title="{baseEvent\n|# etype\l|+ baseEvent()\l+ getType()\l+ is()\l# baseEvent()\l}" alt="" coords="27,5,128,149"/>
-</map>
