@@ -12,7 +12,7 @@ callEvent::callEvent(event_type t):
 }
 
 callEvent::callEvent(event_type t, const char *id, void *h):
-  baseEvent(t,NEW_CALL,CALL_FAIL)
+  baseEvent(t,NEW_CALL,REGISTER_FAIL)
 {
   identity=id;
   handle=h;

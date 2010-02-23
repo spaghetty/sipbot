@@ -17,6 +17,8 @@ Call::~Call()
 
 bool Call::check_count(int max)
 { 
+  printf("prova ancora : %d---%d\n",Call::count, max);
+  
   return (Call::count<max); 
 };
 

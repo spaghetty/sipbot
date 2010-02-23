@@ -34,6 +34,7 @@ class sofiaDriver: public sipDriver
 
   /* end Driver stuff */
  protected:
+
   static void event_manager(nua_event_t, 
 			    int,
 			    const char*, 
@@ -46,6 +47,8 @@ class sofiaDriver: public sipDriver
 
   Call *add_call(const char *id);
   Call *delete_call(const char *id);
+  bool call_exist(const char *id);
+
   void app_shutdown();
   su_home_t home[1];
   su_root_t *root;
@@ -53,6 +56,7 @@ class sofiaDriver: public sipDriver
   nua_t *nua;
   nua_handle_t *handle;
   Ua *ua;
+  pthread_mutex_t call_lock;
  private:
 };
 

@@ -3,12 +3,14 @@
 #include "ua.h"
 #include <sofia-sip/su_log.h>
 #include <sofia-sip/nua_tag.h>
+#include <sofia-sip/sip_status.h>
 
 sofiaDriver::sofiaDriver(Ua *main_ua, const char *url, const char* proxy, int max):
   sipDriver(max)
 {
   ua = main_ua;
   su_home_init(home);
+  pthread_mutex_init(&call_lock, NULL);
   su_log_set_level (su_log_default, 0);
   root = su_root_create(this); /* this is what we will get in magic */
   nua = nua_create(root,     /* Event loop */                             
@@ -21,24 +23,37 @@ sofiaDriver::sofiaDriver(Ua *main_ua, const char *url, const char* proxy, int ma
 
 Call *sofiaDriver::add_call(const char *id)
 {
+  pthread_mutex_lock(&call_lock);
   pair<call_map_t::iterator,bool> ret;
   Call *c = new Call(id);
   ret = calls.insert( make_pair(id,c));
   if(!(ret.second))
     delete c;
+  pthread_mutex_unlock(&call_lock);
   return (*(ret.first)).second;
 };
 
 Call *sofiaDriver::delete_call(const char *id)
 {
+  pthread_mutex_lock(&call_lock);
   call_map_t::iterator it = calls.find(id);
   if (it != calls.end())
     calls.erase(it);
+  pthread_mutex_unlock(&call_lock);
   return (*(it)).second;
 };
 
+bool sofiaDriver::call_exist(const char *id)
+{
+  pthread_mutex_lock(&call_lock);
+  call_map_t::iterator it = calls.find(id);
+  pthread_mutex_unlock(&call_lock);
+  return (it != calls.end());
+}
+
 sofiaDriver::~sofiaDriver()
 {
+  pthread_mutex_destroy(&call_lock);
   nua_destroy(nua);
   su_root_destroy(root);
   su_home_deinit(home);
@@ -126,6 +141,7 @@ void sofiaDriver::event_manager(nua_event_t event,
 				tagi_t *tags)
 {
   sofiaDriver *This = (sofiaDriver *)magic;
+  Call *c= NULL;
   switch (event){
   case nua_r_shutdown:
     if (status < 200) {
@@ -137,6 +153,7 @@ void sofiaDriver::event_manager(nua_event_t event,
   case nua_r_register:
     if(status >= 401 && status <= 407 )
       {
+	printf("miiii che rottura di coglioni");
 	This->ua->add_event(new callEvent(AUTH_REQUIRED,
 					  (nua_handle_local(nh)->a_url)->url_user,
 					  nh));
@@ -176,35 +193,91 @@ void sofiaDriver::event_manager(nua_event_t event,
     break;
     }
   case nua_i_invite:
-    This->ua->add_event(new incomingCallEvent(NEW_CALL,
-					      (nua_handle_local(nh)->a_url)->url_user,
-					      nh));
-    /* try sending invite here */
-    break;
+    {
+      c = This->add_call(sip->sip_call_id->i_id);
+      if(c->check_count(This->max_call))
+	{
+	  printf("che palle \n");
+	  incomingCallEvent *e = new incomingCallEvent(RINGING,
+						       (nua_handle_local(nh)->a_url)->url_user,
+						       nh);
+	  //e->set_context();
+	  This->ua->add_event(e);
+	  nua_respond(nh,
+		      SIP_180_RINGING,
+		      TAG_END());
+	}
+      break;
+    }
+  case nua_r_bye:
+    {
+      
+      break;
+    }
   case nua_i_media_error:
     printf("ma vaffanculo ai media\n");
     break;
   case nua_i_state:
     {
-      //nua_callstate state = nua_callstate_init;
+      printf("we got SCHIFEZZE I STATE\n");
       int state;
-      tl_gets(tags, 
-	      NUTAG_CALLSTATE_REF(state),
-	      TAG_END());
-      Call *c = This->add_call(sip->sip_call_id->i_id);
-      if(!c->check_count(This->max_call))
+      string cid;
+      sip_replaces_t *sip_r = nua_handle_make_replaces(nh, This->home,false);
+      if(sip_r!=NULL)
 	{
-	  /* send cancel */
-	  if(((nua_callstate)state) == nua_callstate_calling)
+	  cid = sip_r->rp_call_id;
+	  su_free(This->home, sip_r);
+	  tl_gets(tags, 
+		  NUTAG_CALLSTATE_REF(state),
+		  TAG_END());
+	  c = This->add_call(cid.c_str());
+	  if(!c->check_count(This->max_call))
 	    {
+	      /* send cancel */
+	      if(((nua_callstate)state) == nua_callstate_calling)
+		{
+		  outgoingCallEvent *a = new outgoingCallEvent(REJECTED_CALL,
+							       (nua_handle_local(nh)->a_url)->url_user,
+							       nh);
+		  nua_cancel(nh,
+			     TAG_END());
+
+		  This->ua->add_event(a);				      
+		}
+	      if(((nua_callstate)state) == nua_callstate_received)
+		{
+		  incomingCallEvent *a = new incomingCallEvent(REJECTED_CALL,
+		  					       (nua_handle_local(nh)->a_url)->url_user,
+							       nh);
+		  nua_respond(nh,
+		  	      SIP_486_BUSY_HERE,
+			      TAG_END());
+		  This->ua->add_event(a);
+		}
+	      nua_handle_destroy(nh);
+	      This->delete_call(cid.c_str());
+	      delete c;
 	    }
-	  printf("so cazzi %s\n",sip->sip_call_id->i_id);
-	}
-      else
-	{
-	  /* let go on */
-	  printf("questa la mandiamo su\n");
-	}
+	  else
+	    {
+	      if(((nua_callstate)state) == nua_callstate_calling)
+		{
+		  outgoingCallEvent *a = new outgoingCallEvent(NEW_CALL,
+							       (nua_handle_local(nh)->a_url)->url_user,
+							       nh);
+		  a->set_context(c);
+		  This->ua->add_event(a);				      
+		}
+	      if(((nua_callstate)state) == nua_callstate_received)
+		{
+		  incomingCallEvent *a = new incomingCallEvent(NEW_CALL,
+							       (nua_handle_local(nh)->a_url)->url_user,
+							       nh);
+		  a->set_context(c);
+		  This->ua->add_event(a);				      
+		}
+	    }
+	}	
       printf("call %s\n", nua_callstate_name((nua_callstate)state));
       break;
     }
