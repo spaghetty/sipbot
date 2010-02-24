@@ -10,7 +10,7 @@
 
 int main(int argc, char* argv[])
 {
-  Ua app("*",5477);
+  Ua app("*",5477,2);
   if(WORK)
     {
       app.set_realm("amati.delcospa.net");
@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
       app.set_proxy("192.168.1.102");
     }
   //printf("this is just setted proxy %s\n", app.get_proxy());
-  if(app.add_line("502","502"))
+  if(app.add_line("1002","502"))
     app.show_lines();
   printf("===================================\n");
   if(app.add_line("1002","1234"))
@@ -39,7 +39,7 @@ int main(int argc, char* argv[])
     }
   else
     {
-      app.add_line("1001","1234");
+      app.add_line("1002","1234");
     }
   app.show_lines();
   Line *l = app.get_line(real_line);
@@ -60,10 +60,10 @@ int main(int argc, char* argv[])
   /*if (l->generate_call("500@amati.delcospa.net")){
     printf("successfully generated call: 500@amatrix.delcospa.net -> %s\n", l->get_registrar(false));
     }*/
-  if(l->generate_call("1001")){
-    printf("successfully generated call: 503@amatrix.delcospa.net -> %s\n", l->get_registrar(false));
-    }*/
-
+  if(l->generate_call("1001"))
+    {
+      printf("successfully generated call: 503@amatrix.delcospa.net -> %s\n", l->get_registrar(false));
+    }
   sleep(30);
   app.stop_everything();
 }

@@ -1,5 +1,4 @@
-STEP 1: Complete current code (interface)
+events integration ->
 
-STEP 2: Integrate SIP Sofia Library (engine)
-
-STEP 3: ..
+1) auth request
+2) timeout and some network errors
