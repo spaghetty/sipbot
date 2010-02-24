@@ -127,7 +127,7 @@ bool Line::generate_call(const char *dialstring)
 {
   if(main_agent->driver != NULL)
     {
-      is_registered = -1; // TRING //
+      //is_registered = -1; // TRyING //
       std::string u = "<sip:";
       u.append(uname);
       u.append("@");
@@ -136,7 +136,7 @@ bool Line::generate_call(const char *dialstring)
 
       std::string dstring = dialstring;
       size_t p = dstring.find("@");
-      if(p != std::string::npos)
+      if(p == std::string::npos)
 	{
 	  dstring.append("@");
 	  dstring.append(registrar->get_uri(false));

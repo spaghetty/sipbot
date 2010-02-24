@@ -14,7 +14,13 @@ class sipDriver
   virtual int auth_dialog(const char *, void *, const char*){return 0;}
   virtual int generate_call(const char *user_name, const char *dest,
                             const char *from, const char *line){return 0;}
+
+  virtual void send_cancel(void *dialog){};
+  virtual void send_line_busy(void *dialog){};
+
  protected:
+  virtual void send_line_free(void *dialog){};
+
   int max_call;
 };
 

@@ -9,7 +9,7 @@ typedef enum event_t{
   /* callEvent events should be in [21,60] */
   /* specific releted to call [21,40] */
   NEW_CALL=21,
-  RINGING,
+  RINGING_CALL,
   HOLD_CALL,
   HELD_CALL,
   REJECTED_CALL,

@@ -32,8 +32,12 @@ class sofiaDriver: public sipDriver
 
   int generate_call(const char *display_name, const char *dest, const char *from, const char *line);
 
+  void send_cancel(void *dialog);
+  void send_line_busy(void *dialog);
+
   /* end Driver stuff */
  protected:
+  void send_line_free(void *dialog);
 
   static void event_manager(nua_event_t, 
 			    int,
@@ -47,7 +51,7 @@ class sofiaDriver: public sipDriver
 
   Call *add_call(const char *id);
   Call *delete_call(const char *id);
-  bool call_exist(const char *id);
+  Call *call_exist(const char *id);
 
   void app_shutdown();
   su_home_t home[1];
