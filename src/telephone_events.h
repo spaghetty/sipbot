@@ -22,6 +22,7 @@ class callEvent: public baseEvent{
 
   void *get_handler();
   void set_handler(void *);
+
  protected:
   const char *identity;
   void *handle;
@@ -34,6 +35,7 @@ class incomingCallEvent: public callEvent
  public:
   incomingCallEvent(event_type, const char*, void *);;
   Call *get_context(){ return context; };
+  void set_context(Call *c){ context = c; };
  protected:
   Call *context;
  private:
@@ -44,6 +46,7 @@ class outgoingCallEvent: public callEvent
  public:
   outgoingCallEvent(event_type, const char*, void *);;
   Call *get_context(){ return context; };
+  void set_context(Call *c){ context = c; };
  protected:
   Call *context;
  private:

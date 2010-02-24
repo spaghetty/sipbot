@@ -6,7 +6,7 @@
 #include <string>
 
 #define WORK 0
-#define real_line "1001"
+#define real_line "1002"
 
 int main(int argc, char* argv[])
 {
@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
   if(app.add_line("502","502"))
     app.show_lines();
   printf("===================================\n");
-  if(app.add_line("502","502"))
+  if(app.add_line("1002","1234"))
     printf("try to add 500 again");//you'll never get this
   app.add_line("703","703");
   app.show_lines();
@@ -44,7 +44,7 @@ int main(int argc, char* argv[])
   app.show_lines();
   Line *l = app.get_line(real_line);
   if(l)
-    printf("minchia che fico \nfirnokkio maledetto\n");
+    printf("minchia che fico \n firnokkio maledetto\n");
   printf("===================================\n");
   app.start_loop();
   
@@ -52,16 +52,15 @@ int main(int argc, char* argv[])
     { sleep(0.5); }
   sleep(2);
   printf("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n");
+  sleep(5);
   /*
   while(!l->unregister_it())
     sleep(0.5);
   */
-
-  /*
-  if (l->generate_call("500@amati.delcospa.net")){
+  /*if (l->generate_call("500@amati.delcospa.net")){
     printf("successfully generated call: 500@amatrix.delcospa.net -> %s\n", l->get_registrar(false));
-  }
-  if(l->generate_call("503@amati.delcospa.net")){
+    }*/
+  if(l->generate_call("1001")){
     printf("successfully generated call: 503@amatrix.delcospa.net -> %s\n", l->get_registrar(false));
     }*/
 

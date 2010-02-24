@@ -13,7 +13,7 @@ bool eventHandler::manage_event(baseEvent *e)
 {
   if( e->getType()>=NETWORK_EVENT and e->getType()<=NETWORK_FAIL)
     return network_event((networkEvent*)e);
-  if( e->getType()>=NEW_CALL and e->getType()<=CALL_FAIL)
+  if( e->getType()>=NEW_CALL and e->getType()<=REGISTER_FAIL)
     return call_event((callEvent*)e);
   if( e->getType()>=CLIENT_EXIT and e->getType()<=CLIENT_FAIL)
     return client_event((clientEvent*)e);

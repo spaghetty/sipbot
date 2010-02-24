@@ -4,12 +4,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-Ua::Ua(std::string bind, int port)
+Ua::Ua(std::string bind, int port, int max_c)
 {
   int ret;
   int i;
   bind_ip = bind;
   bind_port = port;
+  max_call = max_c;
   driver_ready = false;
   evh = new eventHandler(this);
   for( i=0; i < 4; i++)
@@ -172,7 +173,7 @@ void *Ua::sip_driver(void *self)
   sipServer url((This->bind_ip).c_str(),"",This->bind_port);
   This->driver = new sofiaDriver(This, url.get_uri(true).c_str(), 
 				 (This->proxy).get_uri(true).c_str(),
-				 2);
+				 This->max_call);
   //This->sip_loop_rand_event_gen();
   This->driver->start();
   pthread_exit(NULL);

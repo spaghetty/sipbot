@@ -9,16 +9,17 @@ typedef enum event_t{
   /* callEvent events should be in [21,60] */
   /* specific releted to call [21,40] */
   NEW_CALL=21,
-  RINGING,
+  RINGING_CALL,
   HOLD_CALL,
   HELD_CALL,
+  REJECTED_CALL,
   RELEASE_CALL,
   CALL_FAIL=40,
+  /* generic signalig stuff [41,60] */
   AUTH_REQUIRED,
   REGISTER_START,
   REGISTER_DONE,
   REGISTER_FAIL=60,  
-  /* generic signalig stuff [41,60] */
   /* client events should be in [61,80] */
   CLIENT_EXIT=61,
   DRIVER_READY,
