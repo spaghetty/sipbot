@@ -15,40 +15,22 @@ class callEvent: public baseEvent{
  public:
   //events should be in [21,40]
   callEvent(event_type);
-  callEvent(event_type, const char*, void *);
+  callEvent(event_type, const char*, dialog_h);
 
   const char *get_identity();
   void set_identity(const char *);
 
-  void *get_handler();
-  void set_handler(void *);
+  dialog_h get_handler();
+  void set_handler(dialog_h);
+  
+  Call *get_context(){ return context; };
+  void set_context(Call *c){ context = c; };
 
  protected:
   const char *identity;
-  void *handle;
+  dialog_h handle;
+  Call *context;
   int direction;
- private:
-};
-
-class incomingCallEvent: public callEvent
-{
- public:
-  incomingCallEvent(event_type, const char*, void *);;
-  Call *get_context(){ return context; };
-  void set_context(Call *c){ context = c; };
- protected:
-  Call *context;
- private:
-};
-
-class outgoingCallEvent: public callEvent
-{
- public:
-  outgoingCallEvent(event_type, const char*, void *);;
-  Call *get_context(){ return context; };
-  void set_context(Call *c){ context = c; };
- protected:
-  Call *context;
  private:
 };
 

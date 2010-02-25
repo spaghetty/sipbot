@@ -130,6 +130,7 @@ bool Ua::register_all()
   return false;
 }
 
+/* why we got void * back here ?*/
 void *Ua::event_loop(void *self)
 {
   bool stop = false;

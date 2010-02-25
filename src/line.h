@@ -2,6 +2,7 @@
 #define tsip_line
 
 #include "sip_server.h"
+#include "sip_driver.h"
 #include <string>
 
 class Ua;
@@ -18,14 +19,14 @@ class Line
   bool register_it();
   bool unregister_it();
   bool generate_call(const char *dialstring);
-  void auth_dialog(void *dialog);
+  void auth_dialog(dialog_h dialog);
   int get_register_status(){ return is_registered; }
 ;
  protected:
   Line(Ua *);
   friend class Ua;
   friend class eventHandler;
-  void *reg_handler;
+  dialog_h reg_handler;
   std::string get_auth();
   int is_registered;
 

@@ -5,16 +5,16 @@
 #include <stdio.h>
 #include <string>
 
-#define WORK 0
-#define real_line "1002"
+#define WORK true
+#define real_line "722"
 
 int main(int argc, char* argv[])
 {
   Ua app("*",5477,2);
   if(WORK)
     {
-      app.set_realm("amati.delcospa.net");
-      app.set_proxy("192.168.64.228");
+      app.set_realm("erin.delcospa.net");
+      app.set_proxy("192.168.64.224");
     }
   else
     {
@@ -28,14 +28,15 @@ int main(int argc, char* argv[])
   if(app.add_line("1002","1234"))
     printf("try to add 500 again");//you'll never get this
   app.add_line("703","703");
-  app.show_lines();
+  //app.show_lines();
   printf("===================================\n");
   app.del_line("703");
   app.del_line("502");
+  app.del_line("1002");
   /* real line */
   if(WORK)
     {
-      app.add_line("502","502");
+      app.add_line("722","722");
     }
   else
     {
@@ -49,8 +50,12 @@ int main(int argc, char* argv[])
   app.start_loop();
   
   while(! app.register_all())
-    { sleep(0.5); }
-  sleep(2);
+    { 
+      printf(".");
+      sleep(1); 
+    }
+  printf("\n");
+  //sleep(2);
   printf("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n");
   sleep(5);
   /*
@@ -60,10 +65,10 @@ int main(int argc, char* argv[])
   /*if (l->generate_call("500@amati.delcospa.net")){
     printf("successfully generated call: 500@amatrix.delcospa.net -> %s\n", l->get_registrar(false));
     }*/
-  if(l->generate_call("1001"))
+  /*if(l->generate_call("700"))
     {
       printf("successfully generated call: 503@amatrix.delcospa.net -> %s\n", l->get_registrar(false));
-    }
+      }*/
   sleep(30);
   app.stop_everything();
 }

@@ -26,18 +26,18 @@ class sofiaDriver: public sipDriver
 		    const char *url,
 		    const char *line);
 
-  int unregister_line(void *nh);
+  int unregister_line(dialog_h nh);
 
-  int auth_dialog(const char *, void *dialog, const char*);
+  int auth_dialog(const char *, dialog_h dialog, const char*);
 
   int generate_call(const char *display_name, const char *dest, const char *from, const char *line);
 
-  void send_cancel(void *dialog);
-  void send_line_busy(void *dialog);
+  void send_cancel(dialog_h dialog);
+  void send_line_busy(dialog_h dialog);
 
   /* end Driver stuff */
  protected:
-  void send_line_free(void *dialog);
+  void send_line_free(dialog_h dialog);
 
   static void event_manager(nua_event_t, 
 			    int,

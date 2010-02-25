@@ -11,24 +11,12 @@ callEvent::callEvent(event_type t):
   identity=NULL;
 }
 
-callEvent::callEvent(event_type t, const char *id, void *h):
+callEvent::callEvent(event_type t, const char *id, dialog_h h):
   baseEvent(t,NEW_CALL,REGISTER_FAIL)
 {
   identity=id;
   handle=h;
   direction = 0;
-}
-
-incomingCallEvent::incomingCallEvent(event_type t, const char *id, void *h):
-  callEvent(t,id,h)
-{
-  direction= -1;
-}
-
-outgoingCallEvent::outgoingCallEvent(event_type t, const char *id, void *h):
-  callEvent(t,id,h)
-{
-  direction = 1;
 }
 
 void callEvent::set_identity(const char *i)
@@ -41,11 +29,11 @@ const char *callEvent::get_identity()
   return identity;
 }
 
-void *callEvent::get_handler()
+dialog_h callEvent::get_handler()
 {
   return handle;
 }
-void callEvent::set_handler(void *h)
+void callEvent::set_handler(dialog_h h)
 {
   handle = h;
 }

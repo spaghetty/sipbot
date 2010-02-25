@@ -118,7 +118,7 @@ string Line::get_auth()
   return auth;
 };
 
-void Line::auth_dialog(void *dialog)
+void Line::auth_dialog(dialog_h dialog)
 {
   main_agent->driver->auth_dialog(get_auth().c_str(),dialog, registrar->get_uri(true).c_str());
 }

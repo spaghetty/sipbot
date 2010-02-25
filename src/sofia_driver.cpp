@@ -23,24 +23,24 @@ sofiaDriver::sofiaDriver(Ua *main_ua, const char *url, const char* proxy, int ma
 
 Call *sofiaDriver::add_call(const char *id)
 {
-  pthread_mutex_lock(&call_lock);
-  pair<call_map_t::iterator,bool> ret;
-  Call *c = new Call(id);
-  if(!c->check_count(max_call))
+  Call *c;
+  if( Call::count < max_call)
     {
-      /* too much call here */
-      delete c;
       c = call_exist(id);
+      if(!c)
+	{
+	  pthread_mutex_lock(&call_lock);
+	  pair<call_map_t::iterator,bool> ret;
+	  c = new Call(id);
+	  ret = calls.insert( make_pair(id,c));
+	  c = (*(ret.first)).second;
+	  pthread_mutex_unlock(&call_lock);
+	}
     }
   else
-    {
-      ret = calls.insert( make_pair(id,c));
-      if(!(ret.second))
-        delete c;
-      c = (*(ret.first)).second;
-    }
-  pthread_mutex_unlock(&call_lock);
-  printf("prova ancora : %d---%d\n",c->count, max_call);
+    c = NULL;
+  if(c)
+    printf("prova ancora : %d---%d\n",c->count, max_call);
   return c; 
 };
 
@@ -59,9 +59,9 @@ Call *sofiaDriver::call_exist(const char *id)
   Call *res = NULL;
   pthread_mutex_lock(&call_lock);
   call_map_t::iterator it = calls.find(id);
-  pthread_mutex_unlock(&call_lock);
   if(it != calls.end())
     res = it->second;
+  pthread_mutex_unlock(&call_lock);
   return res;
 }
 
@@ -103,12 +103,12 @@ int sofiaDriver::register_line(const char *display_name, const char *user_name, 
 	       NUTAG_KEEPALIVE_STREAM(0),
 	       TAG_END());
   ((callEvent*)e)->set_identity((nua_handle_local(hd)->a_url)->url_user);
-  ((callEvent*)e)->set_handler((void*)hd);
+  ((callEvent*)e)->set_handler((dialog_h)hd);
   ua->add_event(e);
   return 1;
 }
 
-int sofiaDriver::unregister_line(void *dialog)
+int sofiaDriver::unregister_line(dialog_h dialog)
 {
   nua_handle_t *hd = NULL;
   hd = (nua_handle_t*)dialog;
@@ -119,7 +119,7 @@ int sofiaDriver::unregister_line(void *dialog)
 }
 
 /* need to be in form "diget:<realm>:<user>:<passwd>" */
-int sofiaDriver::auth_dialog(const char *auth, void *dialog, const char *registrar)
+int sofiaDriver::auth_dialog(const char *auth, dialog_h dialog, const char *registrar)
 {
   nua_handle_t *hd = NULL;
   hd = (nua_handle_t*)dialog;
@@ -144,7 +144,7 @@ int sofiaDriver::generate_call(const char *user_name, const char *dest, const ch
   return 0;
 };
 
-void sofiaDriver::send_line_free(void *dialog)
+void sofiaDriver::send_line_free(dialog_h dialog)
 {
   nua_handle_t *hd = NULL;
   hd = (nua_handle_t*)dialog;
@@ -153,7 +153,7 @@ void sofiaDriver::send_line_free(void *dialog)
               TAG_END());
 };
 
-void sofiaDriver::send_line_busy(void *dialog)
+void sofiaDriver::send_line_busy(dialog_h dialog)
 {
   nua_handle_t *hd = NULL;
   hd = (nua_handle_t*)dialog;
@@ -162,7 +162,7 @@ void sofiaDriver::send_line_busy(void *dialog)
               TAG_END());
 };
 
-void sofiaDriver::send_cancel(void *dialog)
+void sofiaDriver::send_cancel(dialog_h dialog)
 {
   nua_handle_t *hd = NULL;
   hd = (nua_handle_t*)dialog;
@@ -215,9 +215,9 @@ void sofiaDriver::event_manager(nua_event_t event,
     printf("statusssssssssss %d\n",status);
     if (status >= 100 && status < 200)
       {
-	This->ua->add_event(new outgoingCallEvent(RINGING_CALL,
-						  (nua_handle_local(nh)->a_url)->url_user,
-						  nh));
+	This->ua->add_event(new callEvent(RINGING_CALL,
+					  (nua_handle_local(nh)->a_url)->url_user,
+					  nh));
       }
     if ( status >= 200 && status < 300 )
       {
@@ -225,9 +225,9 @@ void sofiaDriver::event_manager(nua_event_t event,
       }
     if( status >= 400 && status < 500 )
       {
-	This->ua->add_event(new outgoingCallEvent(CALL_FAIL,
-						  (nua_handle_local(nh)->a_url)->url_user,
-						  nh));
+	This->ua->add_event(new callEvent(CALL_FAIL,
+					  (nua_handle_local(nh)->a_url)->url_user,
+					  nh));
       }
     break;
     }
@@ -236,9 +236,9 @@ void sofiaDriver::event_manager(nua_event_t event,
       c = This->add_call(sip->sip_call_id->i_id);
       if(c)
 	{
-	  incomingCallEvent *e = new incomingCallEvent(RINGING_CALL,
-						       (nua_handle_local(nh)->a_url)->url_user,
-						       nh);
+	  callEvent *e = new callEvent(RINGING_CALL,
+				       (nua_handle_local(nh)->a_url)->url_user,
+				       nh);
 	  e->set_context(c);
 	  This->ua->add_event(e);
           This->send_line_free(nh);
@@ -271,17 +271,20 @@ void sofiaDriver::event_manager(nua_event_t event,
 	      /* send cancel */
 	      if(((nua_callstate)state) == nua_callstate_calling)
 		{
-		  outgoingCallEvent *a = new outgoingCallEvent(REJECTED_CALL,
-							       (nua_handle_local(nh)->a_url)->url_user,
-							       nh);
+		  /* outgoing stuff */
+		  callEvent *a = new callEvent(REJECTED_CALL,
+					       (nua_handle_local(nh)->a_url)->url_user,
+					       nh);
                   This->send_cancel(nh);
 		  This->ua->add_event(a);				      
 		}
 	      if(((nua_callstate)state) == nua_callstate_received)
 		{
-		  incomingCallEvent *a = new incomingCallEvent(REJECTED_CALL,
-		  					       (nua_handle_local(nh)->a_url)->url_user,
-							       nh);
+		  /* incoming stuff */
+		  callEvent *a = new callEvent(REJECTED_CALL,
+					       (nua_handle_local(nh)->a_url)->url_user,
+					       nh);
+		  printf("here something to disable\n");
                   This->send_line_busy(nh);
 		  This->ua->add_event(a);
 		}
@@ -292,17 +295,21 @@ void sofiaDriver::event_manager(nua_event_t event,
 	    {
 	      if(((nua_callstate)state) == nua_callstate_calling)
 		{
-		  outgoingCallEvent *a = new outgoingCallEvent(NEW_CALL,
-							       (nua_handle_local(nh)->a_url)->url_user,
-							       nh);
+		  /* outgoing stuff */
+		  callEvent *a = new callEvent(NEW_CALL,
+					       (nua_handle_local(nh)->a_url)->url_user,
+					       nh);
+		  c->set_as_outgoing();
 		  a->set_context(c);
 		  This->ua->add_event(a);				      
 		}
 	      if(((nua_callstate)state) == nua_callstate_received)
 		{
-		  incomingCallEvent *a = new incomingCallEvent(NEW_CALL,
-							       (nua_handle_local(nh)->a_url)->url_user,
-							       nh);
+		  /* incoming stuff */
+		  callEvent *a = new callEvent(NEW_CALL,
+					       (nua_handle_local(nh)->a_url)->url_user,
+					       nh);
+		  c->set_as_incoming();
 		  a->set_context(c);
 		  This->ua->add_event(a);				      
 		}
