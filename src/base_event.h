@@ -12,8 +12,11 @@ typedef enum event_t{
   RINGING_CALL,
   HOLD_CALL,
   HELD_CALL,
+  CONNECTED_CALL,
   REJECTED_CALL,
   RELEASE_CALL,
+  CANCEL_CALL,
+  CLOSE_CALL,
   CALL_FAIL=40,
   /* generic signalig stuff [41,60] */
   AUTH_REQUIRED,

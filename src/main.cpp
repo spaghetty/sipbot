@@ -65,10 +65,10 @@ int main(int argc, char* argv[])
   /*if (l->generate_call("500@amati.delcospa.net")){
     printf("successfully generated call: 500@amatrix.delcospa.net -> %s\n", l->get_registrar(false));
     }*/
-  /*if(l->generate_call("700"))
+  if(l->generate_call("700"))
     {
       printf("successfully generated call: 503@amatrix.delcospa.net -> %s\n", l->get_registrar(false));
-      }*/
+    }
   sleep(30);
   app.stop_everything();
 }

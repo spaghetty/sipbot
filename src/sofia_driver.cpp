@@ -46,12 +46,17 @@ Call *sofiaDriver::add_call(const char *id)
 
 Call *sofiaDriver::delete_call(const char *id)
 {
+  Call *c = NULL;
+  printf("ahhh noi siamo esattamente qua");
   pthread_mutex_lock(&call_lock);
   call_map_t::iterator it = calls.find(id);
   if (it != calls.end())
-    calls.erase(it);
+    {
+      c = (*(it)).second;
+      calls.erase(it);
+    }
   pthread_mutex_unlock(&call_lock);
-  return (*(it)).second;
+  return c; 
 };
 
 Call *sofiaDriver::call_exist(const char *id)
@@ -182,6 +187,7 @@ void sofiaDriver::event_manager(nua_event_t event,
 {
   sofiaDriver *This = (sofiaDriver *)magic;
   Call *c= NULL;
+  printf("something new arrivASDAAAAAAAAAAAAAAAe here\n");
   switch (event){
   case nua_r_shutdown:
     if (status < 200) {
@@ -215,19 +221,38 @@ void sofiaDriver::event_manager(nua_event_t event,
     printf("statusssssssssss %d\n",status);
     if (status >= 100 && status < 200)
       {
-	This->ua->add_event(new callEvent(RINGING_CALL,
-					  (nua_handle_local(nh)->a_url)->url_user,
-					  nh));
+	c = This->add_call(sip->sip_call_id->i_id);
+	if(c){
+	  callEvent *e = new callEvent(RINGING_CALL,
+				       (nua_handle_local(nh)->a_url)->url_user,
+				       nh);
+	  e->set_context(c);
+	  This->ua->add_event(e);
+	}
       }
     if ( status >= 200 && status < 300 )
       {
-	/* i got a reply so cool */
+	c = This->add_call(sip->sip_call_id->i_id);
+	if(c){
+	  callEvent *e = new callEvent(CONNECTED_CALL,
+				       (nua_handle_local(nh)->a_url)->url_user,
+				       nh);
+	  e->set_context(c);
+	  This->ua->add_event(e);
+	}
       }
     if( status >= 400 && status < 500 )
       {
-	This->ua->add_event(new callEvent(CALL_FAIL,
-					  (nua_handle_local(nh)->a_url)->url_user,
-					  nh));
+	printf("we are yere to delete everithing \n");
+	c = This->delete_call(sip->sip_call_id->i_id);
+	if(c)
+	  {
+	    callEvent *e = new callEvent(CALL_FAIL,
+					 (nua_handle_local(nh)->a_url)->url_user,
+					 nh);
+	    e->set_context(c);
+	    This->ua->add_event(e);
+	  }
       }
     break;
     }
@@ -242,6 +267,33 @@ void sofiaDriver::event_manager(nua_event_t event,
 	  e->set_context(c);
 	  This->ua->add_event(e);
           This->send_line_free(nh);
+	}
+      break;
+    }
+  case nua_i_cancel:
+    {
+      c = This->delete_call(sip->sip_call_id->i_id);
+      if(c)
+	{
+	  callEvent *e = new callEvent(CANCEL_CALL,
+				       (nua_handle_local(nh)->a_url)->url_user,
+				       nh);
+	  e->set_context(c);
+	  This->ua->add_event(e);
+	}
+      break;
+    }
+  case nua_i_bye:
+    {
+      printf("got bye\n");
+      c = This->delete_call(sip->sip_call_id->i_id);
+      if(c)
+	{
+	  callEvent *e = new callEvent(CLOSE_CALL,
+				       (nua_handle_local(nh)->a_url)->url_user,
+				       nh);
+	  e->set_context(c);
+	  This->ua->add_event(e);
 	}
       break;
     }

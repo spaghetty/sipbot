@@ -57,6 +57,15 @@ bool eventHandler::call_event(callEvent *e)
 	  l->is_registered = 1; // succesfull registered //
 	}
     }
+  if(e->is(CANCEL_CALL) ||
+     e->is(RELEASE_CALL)||
+     e->is(CLOSE_CALL) ||
+     e->is(CALL_FAIL) )/* this part here is just a temp fix, use will delete call in real use state */
+    {
+      Call *c = e->get_context();
+      if(c)
+	delete c;
+    }
   return true;
 }
 
