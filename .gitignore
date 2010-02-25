@@ -1,3 +1,9 @@
 *~
 build-aux
 m4
+*la
+*lo
+*o
+
+Makefile
+Makefile.in
