@@ -3,7 +3,7 @@
 
 AC_PREREQ([2.63])
 AC_INIT([Opsip_tapi], [0.1], [spaghetty(AT)gmail.com])
-AC_CONFIG_SRCDIR([src/main.cpp])
+AC_CONFIG_SRCDIR([src/])
 AC_CONFIG_HEADERS([config.h])
 #AC_CONFIG_FILE([._bootmp/lib/Makefile])
 AC_CONFIG_AUX_DIR([build-aux])
