@@ -36,4 +36,4 @@ AC_SUBST(LTLIBOBJS)
 LTALLOCA=`echo "$ALLOCA" | sed 's/\.o/.lo/g'`
 AC_SUBST(LTALLOCA)
 
-AC_OUTPUT(Makefile src/Makefile examples/Makefile lib/Makefile)
+AC_OUTPUT(Makefile include/Makefile src/Makefile examples/Makefile lib/Makefile)
