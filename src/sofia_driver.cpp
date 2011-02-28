@@ -2,6 +2,8 @@
 #include "telephone_events.h"
 #include "ua.h"
 #include <sofia-sip/su_log.h>
+#include <sofia-sip/su_addrinfo.h>
+#include <sofia-sip/su_localinfo.h>
 #include <sofia-sip/nua_tag.h>
 #include <sofia-sip/sip_status.h>
 
@@ -20,6 +22,15 @@ sofiaDriver::sofiaDriver(Ua *main_ua, const char *url, const char* proxy, int ma
 		   NUTAG_PROXY(proxy),                                         
 		   TAG_END());    /* should always finish the sequence */
 };
+
+int sofiaDriver::getlocalip()
+{
+  //su_localinfo_t prova;
+  // prova.li_flags=LI_NUMERIC;
+  //su_localinfo_t *my_info;
+  //su_getlocalinfo(&prova, &my_info);
+  //printf("fico %s\n", my_info->li_addr);
+}
 
 Call *sofiaDriver::add_call(const char *id)
 {
@@ -59,8 +70,8 @@ Call *sofiaDriver::delete_call(const char *id)
   return c; 
 };
 
-Call *sofiaDriver::call_exist(const char *id)
-{
+Call *sofiaDriver::call_exist(const char *id){
+
   Call *res = NULL;
   pthread_mutex_lock(&call_lock);
   call_map_t::iterator it = calls.find(id);

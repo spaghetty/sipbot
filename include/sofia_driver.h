@@ -35,6 +35,8 @@ class sofiaDriver: public sipDriver
   void send_cancel(dialog_h dialog);
   void send_line_busy(dialog_h dialog);
 
+  int getlocalip();
+
   /* end Driver stuff */
  protected:
   void send_line_free(dialog_h dialog);

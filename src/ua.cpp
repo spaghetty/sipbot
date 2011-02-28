@@ -8,6 +8,7 @@ Ua::Ua(std::string bind, int port, int max_c)
 {
   int ret;
   int i;
+  driver = NULL;
   bind_ip = bind;
   bind_port = port;
   max_call = max_c;
@@ -25,10 +26,12 @@ Ua::~Ua()
   pthread_mutex_destroy(&lines_lock);
   pthread_mutex_destroy(&event_lock);
   pthread_cond_destroy(&events_ready);
-  delete driver;
+  if(driver!=NULL)
+    {
+      delete driver;
+    }
   delete evh;
 };
-
 
 void Ua::start_loop()
 {
@@ -130,8 +133,8 @@ bool Ua::register_all()
   return false;
 }
 
-/* why we got void * back here ?*/
-void *Ua::event_loop(void *self)
+/* why we have got void * back here ?*/
+void *Ua::event_loop(void *self)  ///FIXME use some more detailed callback and not void*
 {
   bool stop = false;
   Ua *This =  static_cast<Ua*>(self);

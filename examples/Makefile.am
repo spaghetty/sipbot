@@ -1,5 +1,5 @@
 bin_PROGRAMS=tsiptest
-tsiptest_SOURCES= base_text/main.cpp 
+tsiptest_SOURCES= base_text/test_ua.cpp 
 
 tsiptest_LDADD = ../src/libtsip.a $(SOFIA_SIP_UA_LIBS)
 tsiptest_LIBS = ../lib/libgnu.a
