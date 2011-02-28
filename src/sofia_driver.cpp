@@ -23,15 +23,6 @@ sofiaDriver::sofiaDriver(Ua *main_ua, const char *url, const char* proxy, int ma
 		   TAG_END());    /* should always finish the sequence */
 };
 
-int sofiaDriver::getlocalip()
-{
-  //su_localinfo_t prova;
-  // prova.li_flags=LI_NUMERIC;
-  //su_localinfo_t *my_info;
-  //su_getlocalinfo(&prova, &my_info);
-  //printf("fico %s\n", my_info->li_addr);
-}
-
 Call *sofiaDriver::add_call(const char *id)
 {
   Call *c;
